@@ -1,0 +1,18 @@
+[{
+    "id": "84564522",
+    "Title": "Padava",
+    "Type":"Public Holiday",
+    "StartDate":"12/01/2024",
+    "EndDate":"16/01/2024",
+    "Details":"Generate Lorem Ipsum placeholder text. Select the number"
+  },
+  {
+    "id": "84564564",
+    "Title":"Diwali",
+    "Type":"Holiday By Siga",
+    "StartDate":"12/01/2024",
+    "EndDate": "13/01/2024",
+    "Details": "Generate Lorem Ipsum placeholder text. "
+   
+  }
+]

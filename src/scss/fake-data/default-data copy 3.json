@@ -1,0 +1,27 @@
+[{
+    "id": "84564522",
+    "employeeId": "84564522",
+    "name":"Sujit",
+    "LeaveType":"Personal Leave",
+    "ApplyDate":"12/01/2024",
+    "FormDate":"16/01/2024",
+    "ToDate":"13/01/2024",
+    "Details":"Generate Lorem Ipsum placeholder text. Select the number",
+    "status_type": "ti ti-circle-check text-success",
+    "status":"Initiated"
+
+  },
+  {
+    "id": "84564564",
+    "employeeId":"84564564",
+    "name":"Sahadev",
+    "LeaveType":"Sick Leave",
+    "ApplyDate":"12/01/2024",
+    "FormDate":"16/01/2024",
+    "ToDate": "13/01/2024",
+    "Details": "Generate Lorem Ipsum placeholder text. ",
+    "status_type": "ti ti-circle-x text-danger",
+    "status":"withdrawled"
+   
+  }
+]
