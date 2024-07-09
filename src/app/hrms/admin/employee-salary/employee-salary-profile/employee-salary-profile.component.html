@@ -1,0 +1,237 @@
+<div class="row">
+  <ul ngbNav #nav="ngbNav" class="nav-tabs">
+    
+  </ul>
+  <ng-template ngbNavContent [ngIf]="actionLink == 'list'">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h5 class="mb-3 mt-2">TimeSheet Details</h5>
+      <div class="d-flex gap-2 align-items-end">
+        <div>
+          <label for=""><b>Date :</b> </label>
+          <input type="date" [(ngModel)]="date" class="form-control" />
+        </div>
+        <div class="get-btn ms-3">
+          <button class="btn btn-md btn-primary">Get TimeSheet</button>
+        </div>
+      </div>
+      <div class="flex-shrink-0">
+        <img src="assets/images/user/avatar-2.jpg" alt="user-image" class="user-avtar rounded-circle wid-60" />
+      </div>
+    </div>
+    <div class="col-md-5 col-12">
+      <div class="card">
+        <div class="card-body">
+          <div class="container mb-5">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="text-center lh-1 mb-2">
+                  <h6 class="fw-bold">Payslip</h6> <span class="fw-normal">Payment slip for the month of June 2021</span>
+                </div>
+                <div class="d-flex justify-content-end"> <span>Working Branch:ROHINI</span> </div>
+                <div class="row">
+                  <div class="col-md-10">
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div> <span class="fw-bolder">EMP Code</span> <small class="ms-3">39124</small> </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div> <span class="fw-bolder">EMP Name</span> <small class="ms-3">Ashok</small> </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div> <span class="fw-bolder">PF No.</span> <small class="ms-3">101523065714</small> </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div> <span class="fw-bolder">NOD</span> <small class="ms-3">28</small> </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div> <span class="fw-bolder">ESI No.</span> <small class="ms-3"></small> </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div> <span class="fw-bolder">Mode of Pay</span> <small class="ms-3">SBI</small> </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div> <span class="fw-bolder">Designation</span> <small class="ms-3">Marketing Staff (MK)</small> </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div> <span class="fw-bolder">Ac No.</span> <small class="ms-3">*******0701</small> </div>
+                      </div>
+                    </div>
+                  </div>
+                  <table class="mt-4 table table-bordered">
+                    <thead class="bg-dark text-white">
+                      <tr>
+                        <th scope="col">Earnings</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Deductions</th>
+                        <th scope="col">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">Basic</th>
+                        <td>16250.00</td>
+                        <td>PF</td>
+                        <td>1800.00</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">DA</th>
+                        <td>550.00</td>
+                        <td>ESI</td>
+                        <td>142.00</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">HRA</th>
+                        <td>1650.00 </td>
+                        <td>TDS</td>
+                        <td>0.00</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">WA</th>
+                        <td>120.00 </td>
+                        <td>LOP</td>
+                        <td>0.00</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">CA</th>
+                        <td>0.00 </td>
+                        <td>PT</td>
+                        <td>0.00</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">CCA</th>
+                        <td>0.00 </td>
+                        <td>SPL. Deduction</td>
+                        <td>500.00</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">MA</th>
+                        <td>3000.00</td>
+                        <td>EWF</td>
+                        <td>0.00</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Sales Incentive</th>
+                        <td>0.00</td>
+                        <td>CD</td>
+                        <td>0.00</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Leave Encashment</th>
+                        <td>0.00</td>
+                        <td colspan="2"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Holiday Wages</th>
+                        <td>500.00</td>
+                        <td colspan="2"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Special Allowance</th>
+                        <td>100.00</td>
+                        <td colspan="2"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Bonus</th>
+                        <td>1400.00</td>
+                        <td colspan="2"></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Individual Incentive</th>
+                        <td>2400.00</td>
+                        <td colspan="2"></td>
+                      </tr>
+                      <tr class="border-top">
+                        <th scope="row">Total Earning</th>
+                        <td>25970.00</td>
+                        <td>Total Deductions</td>
+                        <td>2442.00</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <br />
+                    <span class="fw-bold">Net Pay : 24528.00</span>
+                  </div>
+                  <div class="border col-md-8">
+                    <div class="d-flex flex-column">
+                      <span>In Words</span> <span>Twenty Five thousand nine hundred seventy only</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-end">
+                  <div class="d-flex flex-column mt-2">
+                    <span class="fw-bolder">For Kalyan Jewellers</span> <span class="mt-4">Authorised Signatory</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-7 col-12">
+      <div class="card tbl-card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover table-borderless mb-0">
+              <thead>
+                <tr class="text-center">
+                  <th>EmployeeId</th>
+                  <th>Name</th>
+                  <th>Basic</th>
+                  <th>Conveyance</th>
+                  <th>TDS</th>
+                  <th>HRA</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr class="text-center" *ngFor="let employee of employeeSalaries">
+                  <td>{{ employee.EmployeeId }}</td>
+                  <td>{{ employee.Employee.FirstName }} {{ employee.Employee.LastName }}</td>
+                  <td>{{ employee.Basic }}</td>
+                  <td>{{ employee.Conveyance }}</td>
+                  <td>{{ employee.TDS }}</td>
+                  <td>{{ employee.HRA }}</td>
+                  <td>
+                    <a class="btn btn-outline-primary m-2" (click)="updateId = employee.EmployeeSalaryId; actionLink = 'updateSalary'"
+                      ><i class="ti ti-edit"></i
+                    ></a>
+                    <a class="btn btn-outline-danger"><i class="ti ti-trash"></i></a>
+                  </td>
+                </tr>
+              </tbody>
+              <button class="btn btn-primary" (click)="actionLink = 'newSalary'">Add New</button>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template ngbNavContent [ngIf]="actionLink == 'list'"> </ng-template>
+
+  <ng-template ngbNavContent [ngIf]="actionLink == 'newSalary'">
+    <app-employee-salary-form [employeeSalary]="employeeSalary" [template]="'EmployeeSalary'"></app-employee-salary-form>
+  </ng-template>
+
+  <ng-template ngbNavContent [ngIf]="actionLink == 'updateSalary'">
+    <app-employee-salary-form
+      [updateId]="updateId"
+      [employeeSalary]="employeeSalary"
+      [template]="'EmployeeSalary'"
+    ></app-employee-salary-form>
+  </ng-template>
+
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
+</div>

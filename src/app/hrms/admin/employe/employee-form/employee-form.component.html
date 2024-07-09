@@ -1,0 +1,332 @@
+<div class="table-responsive mt-5">
+  <div class="card">
+    <div class="card-body">
+      <div class="d-flex justify-content-between">
+        <h3 *ngIf="updateId !== undefined"><b>Update Employee Information</b></h3>
+        <h3 *ngIf="updateId === undefined"><b>Add Employee Information</b></h3>
+        <div>
+          <img src="assets/images/user/avatar-2.jpg" class="rounded-circle" alt="Upload File" height="100" width="100" />
+          <input id="fileUpload" type="file" (change)="onFileSelected($event)" accept=".png" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="form-label" for="firstName">First Name*</label>
+            <input
+              type="text"
+              [(ngModel)]="employeeDto.FirstName"
+              class="form-control"
+              #firstname="ngModel"
+              id="firstName"
+              placeholder="First Name"
+              required
+            />
+          </div>
+          <div *ngIf="firstname.invalid && (firstname.dirty || firstname.touched)" class="alert alert-danger">
+            <div *ngIf="firstname.errors?.['required']">First Name is required.</div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="form-label" for="MiddleName">Middle Name*</label>
+            <input
+              type="text"
+              [(ngModel)]="employeeDto.MiddleName"
+              class="form-control"
+              #MiddleName="ngModel"
+              id="MiddleName"
+              placeholder="Middle Name"
+              required
+            />
+          </div>
+          <div *ngIf="MiddleName.invalid && (MiddleName.dirty || MiddleName.touched)" class="alert alert-danger">
+            <div *ngIf="MiddleName.errors?.['required']">Middle Name is required.</div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="form-label" for="lastName">Last Name*</label>
+            <input
+              type="text"
+              [(ngModel)]="employeeDto.LastName"
+              required
+              #lastName="ngModel"
+              class="form-control"
+              id="lastName"
+              placeholder="Last Name"
+            />
+          </div>
+          <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="alert alert-danger">
+            <div *ngIf="lastName.errors?.['required']">Last Name is required.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="form-label" for="gender">Gender*</label>
+            <select
+              [(ngModel)]="employeeDto.Gender"
+              class="form-control"
+              #Gender="ngModel"
+              required
+              id="gender"
+              placeholder="Select Gender"
+            >
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+          <div *ngIf="Gender.invalid && (Gender.dirty || Gender.touched)" class="alert alert-danger">
+            <div *ngIf="Gender.errors?.['required']">Gender is required.</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="form-label" for="dob">Date Of Birth*</label>
+            <input
+              type="date"
+              [(ngModel)]="employeeDto.DateOfBirth"
+              #DateOfBirth="ngModel"
+              required
+              class="form-control"
+              id="dob"
+              placeholder="Date Of Birth"
+              max="{{ today }}"
+            />
+          </div>
+          <div *ngIf="DateOfBirth.invalid && (DateOfBirth.dirty || DateOfBirth.touched)" class="alert alert-danger">
+            <div *ngIf="DateOfBirth.errors?.['required']">Date Of Birth is required.</div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="form-label" for="ContactNumber">Contact Number*</label>
+            <input
+              type="text"
+              [(ngModel)]="employeeDto.ContactNumber"
+              #ContactNumber="ngModel"
+              required
+              class="form-control"
+              id="ContactNumber"
+              placeholder="Contact Number"
+            />
+          </div>
+          <div *ngIf="ContactNumber.invalid && (ContactNumber.dirty || ContactNumber.touched)" class="alert alert-danger">
+            <div *ngIf="ContactNumber.errors?.['required']">Contact Number is required.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="form-label" for="CurrentDesignation">Current Designation*</label>
+            <select
+              [(ngModel)]="employeeDto.CurrentDesignation"
+              class="form-control"
+              #CurrentDesignation="ngModel"
+              required
+              id="CurrentDesignation"
+              placeholder="Select Current Designation"
+            >
+              <option value="Manager">Manager</option>
+              <option value="Software Developer">Software Developer</option>
+              <option value="Senior Developer">Senior Developer</option>
+              <option value="Director">Director</option>
+              <option value="Manager COO">Manager COO</option>
+              <option value="Manager CTO">Manager CTO</option>
+              <option value="Software Trainee">Software Trainee</option>
+              <option value="Marketing trainee">Marketing trainee</option>
+              <option value="HR Executive">HR Executive</option>
+              <option value="Software Tester">Software Tester</option>
+            </select>
+          </div>
+          <div *ngIf="CurrentDesignation.invalid && (CurrentDesignation.dirty || CurrentDesignation.touched)" class="alert alert-danger">
+            <div *ngIf="CurrentDesignation.errors?.['required']">Current Designation is required.</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="form-label" for="CompanyEmail">Company Email*</label>
+            <input
+              type="email"
+              required
+              #CompanyEmail="ngModel"
+              [(ngModel)]="employeeDto.CompanyEmail"
+              class="form-control"
+              id="Email"
+              placeholder="Email"
+            />
+          </div>
+          <div *ngIf="CompanyEmail.invalid && (CompanyEmail.dirty || CompanyEmail.touched)" class="alert alert-danger">
+            <div *ngIf="CompanyEmail.errors?.['required']">Company Email is required.</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="form-label" for="PersonalEmail">Personal Email*</label>
+            <input
+              type="email"
+              required
+              #PersonalEmail="ngModel"
+              [(ngModel)]="employeeDto.PersonalEmail"
+              class="form-control"
+              id="PersonalEmail"
+              placeholder="PersonalEmail"
+            />
+          </div>
+          <div *ngIf="PersonalEmail.invalid && (PersonalEmail.dirty || PersonalEmail.touched)" class="alert alert-danger">
+            <div *ngIf="PersonalEmail.errors?.['required']">Personal Email is required.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="form-label" for="DateOfRelieving">Date Of Relieving</label>
+            <input
+              type="date"
+              #DateOfRelieving="ngModel"
+              [(ngModel)]="employeeDto.DateOfRelieving"
+              class="form-control"
+              id="DateOfRelieving"
+              placeholder="Join Date Of First Job"
+            />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="form-label" for="CurrentGrossSalary">Current Gross Salary*</label>
+            <input
+              type="number"
+              #CurrentGrossSalary="ngModel"
+              required
+              [(ngModel)]="employeeDto.CurrentGrossSalary"
+              class="form-control"
+              id="CurrentGrossSalary"
+              placeholder="Enter Current Gross Salary"
+            />
+          </div>
+          <div *ngIf="CurrentGrossSalary.invalid && (CurrentGrossSalary.dirty || CurrentGrossSalary.touched)" class="alert alert-danger">
+            <div *ngIf="CurrentGrossSalary.errors?.['required']">Current Gross Salary is required.</div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="form-label" for="AltContactNumber">Alt Contact Number*</label>
+            <input
+              type="text"
+              [(ngModel)]="employeeDto.AltContactNumber"
+              #AltContactNumber="ngModel"
+              required
+              class="form-control"
+              id="AltContactNumber"
+              placeholder="Contact Number"
+            />
+          </div>
+          <div *ngIf="AltContactNumber.invalid && (AltContactNumber.dirty || AltContactNumber.touched)" class="alert alert-danger">
+            <div *ngIf="AltContactNumber.errors?.['required']">Alt Contact Number is required.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="form-label" for="EmployeeStatus">Employee Status*</label>
+            <select
+              [(ngModel)]="employeeDto.EmployeeStatus"
+              class="form-control"
+              #EmployeeStatus="ngModel"
+              required
+              id="EmployeeStatus"
+              placeholder="Select Employee Status"
+            >
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+              <option value="Relieved">Relieved</option>
+            </select>
+          </div>
+          <div *ngIf="EmployeeStatus.invalid && (EmployeeStatus.dirty || EmployeeStatus.touched)" class="alert alert-danger">
+            <div *ngIf="EmployeeStatus.errors?.['required']">Employee Status is required.</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="form-label" for="TeamLeadId">Team Lead*</label>
+            <select
+              [(ngModel)]="employeeDto.TeamLeadId"
+              class="form-control"
+              #TeamLeadId="ngModel"
+              required
+              id="TeamLeadId"
+              placeholder="Select TeamLead"
+            >
+              <option *ngFor="let employee of employees" value="{{ employee.EmployeeId }}"
+                >{{ employee.FirstName }} {{ employee.LastName }}</option
+              >
+            </select>
+          </div>
+          <div *ngIf="TeamLeadId.invalid && (TeamLeadId.dirty || TeamLeadId.touched)" class="alert alert-danger">
+            <div *ngIf="TeamLeadId.errors?.['required']">TeamLead is required.</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="form-label" for="ReportingManagerId">Reporting Manager*</label>
+            <select
+              [(ngModel)]="employeeDto.ReportingManagerId"
+              class="form-control"
+              #ReportingManagerId="ngModel"
+              required
+              id="ReportingManagerId"
+              placeholder="Select ReportingManager"
+            >
+              <option *ngFor="let employee of employees" value="{{ employee.EmployeeId }}"
+                >{{ employee.FirstName }} {{ employee.LastName }}</option
+              >
+            </select>
+          </div>
+          <div *ngIf="ReportingManagerId.invalid && (ReportingManagerId.dirty || ReportingManagerId.touched)" class="alert alert-danger">
+            <div *ngIf="ReportingManagerId.errors?.['required']">ReportingManager is required.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="form-label" for="dateOfJoining">Date Of Joining</label>
+            <input
+              type="date"
+              #dateOfJoining="ngModel"
+              [(ngModel)]="employeeDto.DateOfJoining"
+              class="form-control"
+              id="dateOfJoining"
+              placeholder="Join Date Of First Job"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="updateId == undefined" class="d-grid mt-3">
+        <button type="button" class="btn btn-primary" (click)="addEmployee()"> Add Employee </button>
+      </div>
+      <div *ngIf="updateId != undefined" class="d-grid mt-3">
+        <button type="button" class="btn btn-primary" (click)="updateEmployee()"> Update Employee </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- [disabled]="
+  !firstname.valid || !lastName.valid || !CurrentDesignation.valid || !Gender.valid || !DateOfBirth.valid || !CompanyEmail.valid -->
