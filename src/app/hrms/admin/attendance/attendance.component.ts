@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SharedModule } from 'src/app/common/component/module/shared.module';
 import { Attendance, RequestDto } from 'src/app/common/datatypes/DataTypes';
@@ -16,17 +16,18 @@ import { AuthService } from 'src/app/common/service/authitication/auth.service';
   styleUrls: ['./attendance.component.scss'],
   imports: [CommonModule, SharedModule, AttedanceProfileComponent]
 })
-export default class AttendanceComponent implements AfterViewInit {
+export default class AttendanceComponent implements AfterViewInit, OnDestroy {
   @ViewChild('attedanceProfile') attedanceProfileComponent!: AttedanceProfileComponent;
-  today: any;
-  attendancelist: Attendance[];
+  today: string = this.datePipe.transform(new Date(), 'yyyy-MM-dd')!;
+  attendancelist: Attendance[] = [];
+  allAtedanceList: Attendance[] = [];
+  activeLink: string = 'list';
+  from: string = this.today;
+  to: string = this.today;
+  private timerSubscription?: Subscription;
+  attendanceButton: string = 'InTime';
+  childAttendancelist: Attendance[] = [];
   active: any;
-  activeLink: any = 'list';
-  from: any = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
-  to: any = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
-  private timerSubscription: Subscription;
-  attendanceButton: string;
-  childAttendancelist: Attendance[];
 
   constructor(
     private apiService: ApiService,
@@ -34,27 +35,23 @@ export default class AttendanceComponent implements AfterViewInit {
     private commonService: CommonService,
     private authService: AuthService
   ) {
-    this.GetAttedanceByDate();
-  }
-  async ngAfterViewInit(): Promise<void> {
-    await this.GetAttedanceByDate();
-  }
-  JsonToCsv() {
-    this.commonService.exportToCsv(this.attendancelist, `Attedance-${this.today}.csv`);
+    this.fetchAttendanceData();
   }
 
-  async checkIn() {
+  async ngAfterViewInit(): Promise<void> {
+    await this.fetchAttendanceData();
+  }
+
+  JsonToCsv(): void {
+    this.commonService.exportToCsv(this.attendancelist, `Attendance-${this.today}.csv`);
+  }
+
+  async checkIn(): Promise<void> {
     await this.attedanceProfileComponent.checkIn();
     this.setAttendanceButton();
   }
 
-  async setChildList(employeeId) {
-    this.childAttendancelist = this.attendancelist
-      .filter((x) => x.EmployeeId === employeeId)
-      .sort((a, b) => new Date(a.CreatedDateTime).getTime() - new Date(b.CreatedDateTime).getTime());
-  }
-
-  async checkOut() {
+  async checkOut(): Promise<void> {
     if (this.attedanceProfileComponent) {
       await this.attedanceProfileComponent.checkOut();
       this.setAttendanceButton();
@@ -63,32 +60,74 @@ export default class AttendanceComponent implements AfterViewInit {
     }
   }
 
-  GetAttedanceByDate() {
-    this.apiService.getByDate(Api.Attendance, new RequestDto(null, this.from, this.to)).subscribe((data) => {
+  async setChildList(employeeId: number, date: string): Promise<void> {
+    this.childAttendancelist = this.filterAndSortAttendances(employeeId, date, 'CreatedDateTime', 'asc');
+    console.log(this.childAttendancelist);
+    
+  }
+
+  getAttendanceTime(employeeId: number, date: string, timeType: 'InTime' | 'OutTime', sortOrder: 'asc' | 'desc'): Attendance | undefined {
+    return this.filterAndSortAttendances(employeeId, date, timeType, sortOrder)[0];
+  }
+
+  private filterAndSortAttendances(employeeId: number, date: string, sortField: string, sortOrder: 'asc' | 'desc'): Attendance[] {
+    return this.attendancelist
+      .filter(x => x.EmployeeId === employeeId && x.AttendanceDate === date)
+      .sort((a, b) => sortOrder === 'asc' 
+        ? new Date(a[sortField]!).getTime() - new Date(b[sortField]!).getTime() 
+        : new Date(b[sortField]!).getTime() - new Date(a[sortField]!).getTime()
+      );
+  }
+
+   fetchAttendanceData(): void {
+    this.apiService.getByDate(Api.Attendance, new RequestDto(null, this.from, this.to)).subscribe((data: Attendance[]) => {
       this.attendancelist = data;
+      this.allAtedanceList = this.aggregateTimeSheets(data);
       this.setAttendanceButton();
     });
   }
 
-  calculateWorkedTime(inTime: any, outTime: any) {
-    !outTime ? (outTime = new Date()) : (outTime = new Date(outTime));
-    const diffMs = new Date(outTime).getTime() - new Date(inTime).getTime();
-    const hours = Math.floor(diffMs / (1000 * 60 * 60));
-    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
-    return `${hours}:${minutes}:${seconds}`;
+  getInTime(employeeId: number, date: string): Attendance | undefined {
+    return this.filterAndSortAttendances(employeeId, date, 'InTime', 'asc')[0];
   }
 
-  ngOnDestroy(): void {
-    if (this.timerSubscription) {
-      this.timerSubscription.unsubscribe();
-    }
+  getOutTime(employeeId: number, date: string): Attendance | undefined {
+    return this.filterAndSortAttendances(employeeId, date, 'OutTime', 'desc')[0];
+  }
+  private aggregateTimeSheets(data: Attendance[]): any[] {
+    const uniqueTimesheets = new Map<string, any>();
+
+    data.forEach(e => {
+      const key = JSON.stringify({ AttendanceDate: e.AttendanceDate, EmployeeId: e.EmployeeId });
+
+      if (!uniqueTimesheets.has(key)) {
+        uniqueTimesheets.set(key, {
+          AttendanceDate: e.AttendanceDate,
+          EmployeeId: e.EmployeeId,
+          Employee: e.Employee,
+          WorkTime: 0
+        });
+      }
+
+      const timesheetEntry = uniqueTimesheets.get(key);
+      timesheetEntry.WorkTime += this.commonService.calculateWorkedTimeinSeconds(e.InTime, e.OutTime);
+    });
+
+    return Array.from(uniqueTimesheets.values());
+  }
+
+  convertSecondsToTime(data): any {
+    return this.commonService.convertSecondsToTime(data);
   }
 
   private async setAttendanceButton(): Promise<void> {
     const { email: currentUserEmail } = await this.authService.decodeObjectFromBase64(localStorage.getItem('jwt'));
-    this.attendanceButton = this.attendancelist.some((x) => x.Employee.CompanyEmail === currentUserEmail && x.OutTime === null)
+    this.attendanceButton = this.attendancelist.some(x => x.Employee.CompanyEmail === currentUserEmail && x.OutTime === null)
       ? 'OutTime'
       : 'InTime';
+  }
+
+  ngOnDestroy(): void {
+    this.timerSubscription?.unsubscribe();
   }
 }

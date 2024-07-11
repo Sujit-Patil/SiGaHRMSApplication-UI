@@ -1,4 +1,4 @@
-import { LeaveType, TaskType, TimeSheetStatus, TimeSheetType } from '../enum/enum';
+import { LeaveBalanceStatus, LeaveType, TaskType, TimeSheetStatus, TimeSheetType } from '../enum/enum';
 
 export class EmailDto {
   toEmail: string;
@@ -6,9 +6,9 @@ export class EmailDto {
   body: string;
 }
 
-export class TaskName{
-  TaskId:number;
-  TaskDetails:string;
+export class TaskName {
+  TaskId: number;
+  TaskDetails: string;
 }
 export class Employee {
   EmployeeId: number;
@@ -95,17 +95,17 @@ export const timeSheetStatusOptions = [
   { value: TimeSheetStatus.Submitted, label: 'Submitted' },
   { value: TimeSheetStatus.Approved, label: 'Approved' },
   { value: TimeSheetStatus.Rejected, label: 'Rejected' }
- 
 ];
 
 export const timeSheetTypeOptions = [
   { value: TimeSheetType.Daily, label: 'Daily' },
   { value: TimeSheetType.Weekly, label: 'Weekly' }
-  
- 
- 
 ];
 
+export const LeaveBalanceStatusOptions = [
+  { value: LeaveBalanceStatus.Applicable, label: 'Applicable' },
+  { value: LeaveBalanceStatus.NotApplicable, label: 'NotApplicable' }
+];
 
 export class RequestDto {
   EmployeeId: number = null;
@@ -164,10 +164,10 @@ export class CalendarDto {
 export class TimeSheet {
   TimesheetId: number;
   TimesheetDate: any;
-  ToTimesheetDate:any=null;
+  ToTimesheetDate: any = null;
   TimesheetStatus: any;
   Approver?: number | null;
-  WorkingHours:any=null;
+  WorkingHours: any = null;
   ApproverEmployee?: Employee | null;
   EmployeeId: number;
   Employee?: Employee | null;
@@ -183,10 +183,10 @@ export class TimeSheet {
 export class TimeSheetDetail {
   TimeSheetDetailId: number;
   TaskId: number;
-  Task:TaskName;
+  Task: TaskName;
   HoursSpent: number;
   IsBillable: boolean;
-  TimeSheetDate=null;
+  TimeSheetDate = null;
   TaskType: any;
   ProjectId?: number | null = null;
   Project?: any | null = null;
@@ -204,10 +204,10 @@ export class TimeSheetDetail {
 }
 
 export class EmployeeSalary {
-  EmployeeSalaryStructureId: number ;
+  EmployeeSalaryStructureId: number;
   FromDate: any = null;
   ToDate: any = null;
-  EmployeeSalaryId: number ;
+  EmployeeSalaryId: number;
   SalaryForAMonth: Date;
   Basic: number;
   HRA: number;
@@ -233,6 +233,39 @@ export class EmployeeSalary {
   LastModifiedDateTime?: any | null = null;
   DeletedBy?: number | null = null;
   DeletedDateTime?: any | null = null;
+}
+
+export class LeaveBalance {
+  LeaveBalanceId: number;
+  Year: number;
+  EarnedLeaves: number;
+  CasualLeaves: number;
+  SickLeaves: number;
+  MaternityLeaves: number;
+  CompensatoryOffs: number;
+  MarriageLeaves: number;
+  PaternityLeaves: number;
+  BereavementLeaves: number;
+  LossofPayLeaves: number;
+  EarnedLeavesAvailaed: number | null = null;
+  CasualLeavesAvailaed: number | null = null;
+  SickLeavesAvailaed: number | null = null;
+  MaternityLeavesAvailaed: number | null = null;
+  CompensatoryOffsAvailaed: number | null = null;
+  MarriageLeavesAvailaed: number | null = null;
+  PaternityLeavesAvailaed: number | null = null;
+  BereavementLeavesAvailaed: number | null = null;
+  LossofPayLeavesAvailaed: number | null = null;
+  LeaveBalanceStatus: any;
+  EmployeeId: number;
+  Employee: Employee | null = null;
+  IsDeleted: boolean = false;
+  CreatedBy: number | null = null;
+  CreatedDateTime: Date | null = null;
+  LastModifiedBy: number | null = null;
+  LastModifiedDateTime: any = null;
+  DeletedBy: number | null = null;
+  DeletedDateTime: Date | null = null;
 }
 
 export class NotificationDto {

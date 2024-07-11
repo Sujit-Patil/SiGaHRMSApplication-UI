@@ -10,6 +10,12 @@ export enum TimeSheetType {
   Weekly = 'Weekly',
   Daily = 'Daily'
 }
+
+export enum LeaveBalanceStatus {
+  Applicable = 'Applicable',
+  NotApplicable = 'NotApplicable'
+}
+
 export enum LeaveType {
   EarnedLeave = 'EarnedLeave',
   CasualLeave = 'CasualLeave',
