@@ -2,18 +2,18 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { SharedModule } from 'src/app/common/component/module/shared.module';
 import { AlertService } from 'src/app/common/service/alert/alert.service';
-import { Employee, LeaveRequest, RequestDto, leaveTypeOptions } from 'src/app/common/datatypes/DataTypes';
+import { LeaveRequest, RequestDto, leaveTypeOptions } from 'src/app/common/datatypes/DataTypes';
 import { ApiService } from 'src/app/common/service/api/api-service.service';
 import { AuthService } from 'src/app/common/service/authitication/auth.service';
 import { Api } from 'src/app/common/enum/enum';
-import Swal from 'sweetalert2';
+import LeavebalancesComponent from '../leavebalances/leavebalances.component';
 
 @Component({
   selector: 'app-leave',
   standalone: true,
   templateUrl: './leave.component.html',
   styleUrls: ['./leave.component.scss'],
-  imports: [CommonModule, SharedModule]
+  imports: [CommonModule, SharedModule, LeavebalancesComponent]
 })
 export default class LeaveComponent {
   active: any;
@@ -23,6 +23,7 @@ export default class LeaveComponent {
   leaveRequest = new LeaveRequest();
   leaveRequests: LeaveRequest[];
   email: string;
+  activeSection: string = 'leave';
 
   constructor(
     private alertService: AlertService,
@@ -42,12 +43,11 @@ export default class LeaveComponent {
   async newLeaveRequest() {
     this.leaveRequest.EmployeeId = Number(this.authService.decodeObjectFromBase64(localStorage.getItem('jwt'))['employeeId']);
     if ((await this.alertService.leaveRequestAlert(this.leaveRequest)).isConfirmed) {
-      console.log(this.leaveRequest);
       this.apiService.post(Api.LeaveRequest, this.leaveRequest).subscribe((data) => {
         this.alertService
-        .Toast()
-        .fire({ icon: 'success', title: 'Leave Request Added Successfully' })
-        .then((data) => (data.dismiss ? this.GetLeaveByDate() : ''));
+          .Toast()
+          .fire({ icon: 'success', title: 'Leave Request Added Successfully' })
+          .then((data) => (data.dismiss ? this.GetLeaveByDate() : ''));
       });
     }
   }
@@ -57,10 +57,10 @@ export default class LeaveComponent {
     if ((await this.alertService.leaveRequestAlert(this.leaveRequest)).isConfirmed) {
       this.apiService.update(Api.LeaveRequest, this.leaveRequest).subscribe((data) => {
         this.alertService
-        .Toast()
-        .fire({ icon: 'success', title: 'Leave Request Updated Successfully' })
-        .then((data) => (data.dismiss ? this.GetLeaveByDate() : ''));
-      })
+          .Toast()
+          .fire({ icon: 'success', title: 'Leave Request Updated Successfully' })
+          .then((data) => (data.dismiss ? this.GetLeaveByDate() : ''));
+      });
     }
   }
 
@@ -70,10 +70,10 @@ export default class LeaveComponent {
         deleteLeaveRequest.IsDeleted = true;
         this.apiService.update(Api.LeaveRequest, deleteLeaveRequest).subscribe((data) => {
           this.alertService
-        .Toast()
-        .fire({ icon: 'success', title: 'Leave Request Deleted Successfully' })
-        .then((data) => (data.dismiss ? this.GetLeaveByDate() : ''));
-      });
+            .Toast()
+            .fire({ icon: 'success', title: 'Leave Request Deleted Successfully' })
+            .then((data) => (data.dismiss ? this.GetLeaveByDate() : ''));
+        });
       }
     });
   }

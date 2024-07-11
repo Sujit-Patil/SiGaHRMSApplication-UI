@@ -114,8 +114,8 @@ export class TimesheetDetailComponent {
     const { value: text } = await Swal.fire({
       inputLabel: 'Message',
       html: this.getTaskHtml(daySheet),
-      confirmButtonText: this.authUser ? 'Save' : 'OK',
       showCancelButton: true,
+      confirmButtonText: this.authUser ? 'Save' : 'OK',
       didOpen: () => this.setupTaskInputs(daySheet)
     });
 
@@ -366,7 +366,6 @@ export class TimesheetDetailComponent {
         newTimeSheetDetail.IsBillable = (document.getElementById(`isBillable-${newIndex}`) as HTMLSelectElement).value === 'true';
         newTimeSheetDetail.TaskId = daySheet.Task.TaskId;
         newTimeSheetDetail.TimesheetId = daySheet.TimeSheetId;
-        newTimeSheetDetail.CreatedDateTime = new Date(daySheet.Date).toISOString();
         daySheet.TimeSheetDetail.push(newTimeSheetDetail);
       }
     }
@@ -374,6 +373,7 @@ export class TimesheetDetailComponent {
     if (isValid) {
       const promises = daySheet.TimeSheetDetail.map((data) => {
         if (!data.TimeSheetDetailId) {
+          data.TimeSheetDate = daySheet.Date;
           return this.apiService.post(Api.TimesheetDetail, data).toPromise();
         } else {
           return this.apiService.update(Api.TimesheetDetail, data).toPromise();

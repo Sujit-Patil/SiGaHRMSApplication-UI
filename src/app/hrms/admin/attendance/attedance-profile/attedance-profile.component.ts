@@ -25,6 +25,7 @@ export class AttedanceProfileComponent {
   @Input() attendancelist: Attendance[];
   chartOptions: Partial<ChartOptions>;
   date: any = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+  today=this.datePipe.transform(new Date(), 'yyyy-MM-dd');
   active: any;
   weekChart: ApexCharts;
   monthChart: ApexCharts;
@@ -35,7 +36,7 @@ export class AttedanceProfileComponent {
   employeeAtt: Attendance;
   CurrentWorkTime: number;
   WorkTime: number = 0;
-  userAuth = false;
+  userAuth :any;
   private timerSubscription: Subscription;
 
   constructor(
@@ -46,9 +47,10 @@ export class AttedanceProfileComponent {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.userAuth =
-      this.attendancelist[0].EmployeeId === Number(await this.authService.decodeObjectFromBase64(localStorage.getItem('jwt')).employeeId);
+    this.userAuth =Number(await this.authService.decodeObjectFromBase64(localStorage.getItem('jwt')).employeeId);
+      this.date = this.attendancelist[0].AttendanceDate;
     setTimeout(() => this.renderCharts(), 200);
+    await this.getAttendanceByDate(this.attendancelist[0].EmployeeId);
     this.setAttendanceButton();
   }
 
@@ -61,13 +63,11 @@ export class AttedanceProfileComponent {
     var attendanceDto = new Attendance();
     attendanceDto.AttendanceDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
     attendanceDto.InTime = this.datePipe.transform(new Date(), "yyyy-MM-ddTHH:mm:ss.SSS'Z'");
-    attendanceDto.EmployeeId = this.employee.EmployeeId;
-    attendanceDto.CreatedBy = this.employee.EmployeeId;
+    attendanceDto.EmployeeId = Number(this.authService.decodeObjectFromBase64(localStorage.getItem('jwt')).employeeId);
     await this.apiService.post(Api.Attendance, attendanceDto).toPromise();
     this.attendanceButton = 'OutTime';
     this.startUpdatingWorkedTime();
     await this.getAttendanceByDate();
-    this.calculateWorkTime();
   }
 
   stopUpdatingWorkedTime(): void {
@@ -83,7 +83,6 @@ export class AttedanceProfileComponent {
     this.attendanceButton = 'InTime';
     this.stopUpdatingWorkedTime();
     await this.getAttendanceByDate();
-    this.calculateWorkTime();
   }
 
   async decodeJwt() {
@@ -91,33 +90,64 @@ export class AttedanceProfileComponent {
     this.employee = await this.apiService.getUsingEmail(Api.Employee, currentUserEmail).toPromise();
   }
 
-  setAttendanceButton() {
+  async setAttendanceButton() {
     this.employeeAtt = this.attendancelist[0];
-    this.getWeekAttendanceData(this.date);
     this.attendanceButton = this.attendancelist.some((x) => x.OutTime === null) ? 'OutTime' : 'InTime';
     this.startUpdatingWorkedTime();
     this.employeeAtt.OutTime = this.attendancelist[this.attendancelist.length - 1].OutTime;
   }
 
-  async getAttendanceByDate() {
-    const transformedDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+  formatWeekDates(startOfWeek: any): string[] {
+    startOfWeek = new Date(startOfWeek);
+    const weekDates = [];
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(startOfWeek);
+      date.setDate(startOfWeek.getDate() + i);
+      weekDates.push(this.datePipe.transform(date, 'EE, MMMM d'));
+    }
+    return weekDates;
+  }
+
+  updateWeekChart(array: number[], weekDates: string[]) {
+    this.weekOptions.series[0].data = array;
+    this.weekOptions.xaxis.categories = weekDates;
+    if (this.weekChart) {
+      this.weekChart.updateOptions({ xaxis: { categories: weekDates } });
+      this.weekChart.updateSeries(this.weekOptions.series);
+    }
+  }
+
+  async getWeekAttendanceData(date = null) {
+    const { startOfWeek, endOfWeek } = this.getWeekRange(new Date(this.date));
+    const data = await this.apiService
+      .getByDate(Api.Attendance, new RequestDto(this.employeeAtt.EmployeeId, startOfWeek, endOfWeek))
+      .toPromise();
+      this.attendancelist=data.filter((data)=>data.AttendanceDate==date)
+      this.calculateWorkTime();
+    const array = this.processAttendanceData(data);
+    const weekDates = this.formatWeekDates(startOfWeek);
+    this.updateWeekChart(array, weekDates);
+  }
+
+  async getAttendanceByDate(id = null) {
+    const transformedDate = this.datePipe.transform(this.date, 'yyyy-MM-dd');
     this.apiService
-      .getByDate(Api.Attendance, new RequestDto(this.employeeAtt.EmployeeId, transformedDate, transformedDate))
-      .subscribe((data) => (this.attendancelist = data));
-    await this.getWeekAttendanceData(transformedDate);
+      .getByDate(Api.Attendance, new RequestDto(id != null ? id : this.employeeAtt.EmployeeId, transformedDate, transformedDate))
+      .subscribe((data) => {
+        this.attendancelist = data;
+        this.getWeekAttendanceData(transformedDate);
+        this.calculateWorkTime();
+      });
   }
 
   startUpdatingWorkedTime(): void {
     this.calculateWorkTime();
-    if (this.attendanceButton == 'OutTime') {
+    if (this.attendanceButton === 'OutTime') {
       this.timerSubscription = interval(1000).subscribe(() => {
-        this.employeeAtt.WorkTime = this.commonService.convertSecondsToTime(
-          this.WorkTime +
-            this.commonService.calculateWorkedTimeinSeconds(
-              this.attendancelist[this.attendancelist.length - 1].InTime,
-              this.attendancelist[this.attendancelist.length - 1].OutTime
-            )
-        );
+        const lastAttendance = this.attendancelist[this.attendancelist.length - 1];
+        const workedTimeInSeconds = this.commonService.calculateWorkedTimeinSeconds(lastAttendance.InTime, lastAttendance.OutTime);
+        const totalWorkedTimeInSeconds = this.WorkTime + workedTimeInSeconds;
+        this.employeeAtt.WorkTime = this.commonService.convertSecondsToTime(totalWorkedTimeInSeconds);
       });
     }
   }
@@ -130,58 +160,44 @@ export class AttedanceProfileComponent {
     this.employeeAtt.WorkTime = this.commonService.convertSecondsToTime(this.WorkTime);
   }
 
-  async getWeekAttendanceData(date = null) {
-    const { startOfWeek, endOfWeek } = this.getWeekRange(new Date(date));
-    const data = await this.apiService
-      .getByDate(Api.Attendance, new RequestDto(this.employeeAtt.EmployeeId, startOfWeek, endOfWeek))
-      .toPromise();
-    const array = this.processAttendanceData(data);
-    console.log(array);
-    this.updateWeekChart(array);
+  async getYearAttendanceData(next = false, back = false) {
+    const currentDate = new Date(this.date);
+    const yearOffset = next ? 1 : back ? -1 : 0;
+    currentDate.setFullYear(currentDate.getFullYear() + yearOffset);
+
+    const startOfYear = this.datePipe.transform(new Date(currentDate.getFullYear(), 0, 1), 'yyyy-MM-dd');
+    const endOfYear = this.datePipe.transform(new Date(currentDate.getFullYear(), 11, 31), 'yyyy-MM-dd');
+
+    const data = await this.fetchAttendanceData(startOfYear, endOfYear);
+    this.updateMonthChart(this.processAttendanceData(data, true));
   }
 
-  async getYearAttendanceData(next = false, back = false) {
-    let year = new Date(this.date).getFullYear();
-    if (next) year += 1;
-    if (back) year -= 1;
-    const startOfYear = this.datePipe.transform(new Date(year, 0, 1), 'yyyy-MM-dd');
-    const endOfYear = this.datePipe.transform(new Date(year, 11, 31), 'yyyy-MM-dd');
-    const data = await this.apiService
-      .getByDate(Api.Attendance, new RequestDto(this.employeeAtt.EmployeeId, startOfYear, endOfYear))
-      .toPromise();
-    const array = this.processAttendanceData(data, true);
-
-    console.log(array);
-
-    this.updateMonthChart(array);
+  private async fetchAttendanceData(start: string, end: string): Promise<Attendance[]> {
+    return await this.apiService.getByDate(Api.Attendance, new RequestDto(this.employeeAtt.EmployeeId, start, end)).toPromise();
   }
 
   getCalculateWorkedTime(inTime, outTime) {
     return this.commonService.getCalculateWorkedTime(inTime, outTime);
   }
+
   processAttendanceData(data: Attendance[], isYear: boolean = false): number[] {
     const arrayLength = isYear ? 12 : 7;
-    const array = new Array(arrayLength).fill(0);
+    const array = new Array<number>(arrayLength).fill(0);
+
     data.forEach((attendance: Attendance) => {
-      const res = this.commonService.calculateWorkedTime(attendance.InTime, attendance.OutTime);
-      const index = isYear ? new Date(attendance.AttendanceDate).getMonth() - 1 : new Date(attendance.AttendanceDate).getDay() - 1;
-      array[index] += res;
+      const workedTime = this.commonService.calculateWorkedTime(attendance.InTime, attendance.OutTime);
+      const index = isYear ? new Date(attendance.AttendanceDate).getMonth() : new Date(attendance.AttendanceDate).getDay();
+
+      if (index >= 0 && index < arrayLength) {
+        isYear ? (array[index] += workedTime) : (array[index - 1] += workedTime);
+      }
     });
 
-    for (let index = 0; index < array.length; index++) {
-      const totalMinutes = array[index];
+    return array.map((totalMinutes) => {
       const hours = Math.floor(totalMinutes / 60);
       const minutes = totalMinutes % 60;
-      array[index] = parseFloat(`${hours}.${minutes < 10 ? '0' : ''}${minutes}`);
-    }
-    return array;
-  }
-
-  updateWeekChart(array: number[]) {
-    this.weekOptions.series[0].data = array;
-    if (this.weekChart) {
-      this.weekChart.updateSeries(this.weekOptions.series);
-    }
+      return parseFloat(`${hours}.${minutes < 10 ? '0' : ''}${minutes}`);
+    });
   }
 
   updateMonthChart(array: number[]) {
@@ -249,26 +265,31 @@ export class AttedanceProfileComponent {
   };
 
   nextMonth() {
-    this.getYearAttendanceData(true, false);
-    var date = new Date(this.date);
-    this.date = this.datePipe.transform(new Date(date.getFullYear() + 1, date.getMonth(), date.getDate()), 'yyyy-MM-dd');
+    this.updateDateByMonths(1);
   }
 
   backMonth() {
-    this.getYearAttendanceData(false, true);
-    var date = new Date(this.date);
-    this.date = this.datePipe.transform(new Date(date.getFullYear() - 1, date.getMonth(), date.getDate()), 'yyyy-MM-dd');
+    this.updateDateByMonths(-1);
   }
+
   nextWeek() {
-    var date = new Date(this.date);
-    date.setDate(date.getDate() + 7);
-    this.getWeekAttendanceData(date);
-    this.date = this.datePipe.transform(date, 'yyyy-MM-dd');
+    this.updateDateByDays(7);
   }
+
   backWeek() {
-    var date = new Date(this.date);
-    date.setDate(date.getDate() - 7);
-    this.getWeekAttendanceData(date);
+    this.updateDateByDays(-7);
+  }
+
+  private updateDateByMonths(months: number): void {
+    this.getYearAttendanceData(months > 0, months < 0);
+    const date = new Date(this.date);
+    this.date = this.datePipe.transform(new Date(date.getFullYear() + months, date.getMonth(), date.getDate()), 'yyyy-MM-dd');
+  }
+
+  private updateDateByDays(days: number): void {
+    const date = new Date(this.date);
+    date.setDate(date.getDate() + days);
     this.date = this.datePipe.transform(date, 'yyyy-MM-dd');
+    this.getWeekAttendanceData(this.date);
   }
 }

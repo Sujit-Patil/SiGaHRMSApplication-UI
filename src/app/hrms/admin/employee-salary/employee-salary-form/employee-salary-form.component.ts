@@ -43,7 +43,6 @@ export class EmployeeSalaryFormComponent {
   }
   addEmployeeSalaryStructure() {
     this.employeeSalaryDto.EmployeeId = Number(this.employeeSalaryDto.EmployeeId);
-    this.employeeSalaryDto.CreatedDateTime = new Date().toISOString();
     this.apiService.post(Api.EmployeeSalaryStructure, this.employeeSalaryDto).subscribe((data) => {
       this.alertService
         .Toast()
@@ -54,7 +53,6 @@ export class EmployeeSalaryFormComponent {
 
   addEmployeeSalary() {
     this.employeeSalaryDto.EmployeeId = Number(this.employeeSalaryDto.EmployeeId);
-    this.employeeSalaryDto.CreatedDateTime = new Date().toISOString();
     this.apiService.post(Api.EmployeeSalary, this.employeeSalaryDto).subscribe((data) => {
       this.alertService
         .Toast()

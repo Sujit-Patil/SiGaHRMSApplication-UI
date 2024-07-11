@@ -45,7 +45,6 @@ export class AlertService {
                 id="FromDate"
                 value="${leaveRequest.FromDate}"
                 min="${this.datePipe.transform(new Date(), 'yyyy-MM-dd')}"
-                placeholder="Select From Date"
               />
             </div>
           </div>
@@ -59,8 +58,7 @@ export class AlertService {
                 class="form-control"
                 id="ToDate"
                 value="${leaveRequest.ToDate}"
-                min="${leaveRequest.FromDate}"
-                placeholder="Select To Date"
+                min="${leaveRequest.FromDate}" 
               />
             </div>
           </div>
@@ -84,7 +82,7 @@ export class AlertService {
               <textarea
                 class="form-control"
                 id="Reason"
-                placeholder="${leaveRequest.Reason != undefined ? leaveRequest.Reason : 'Type Reson here'}">${
+                placeholder="${leaveRequest.Reason != undefined ? leaveRequest.Reason : 'Type Reason here'}">${
                   leaveRequest.Reason != undefined ? leaveRequest.Reason : ''
                 }</textarea>
             </div>
@@ -98,7 +96,7 @@ export class AlertService {
         leaveRequest.ToDate = (document.getElementById('ToDate') as HTMLInputElement).value;
         leaveRequest.IsHalfDay = (document.getElementById('IsHalfDay') as HTMLSelectElement).value === 'true';
         leaveRequest.Reason = (document.getElementById('Reason') as HTMLTextAreaElement).value;
-
+  
         if (!leaveRequest.LeaveType) {
           Swal.showValidationMessage('Please select a leave type');
           return false;
@@ -107,33 +105,39 @@ export class AlertService {
           Swal.showValidationMessage('Please select a from date');
           return false;
         }
-
-        if (new Date(leaveRequest.FromDate).getUTCDay() == 0 || new Date(leaveRequest.FromDate).getUTCDay()== 6 ) {
-          Swal.showValidationMessage("Sorry FromDate it's weekends !");
+  
+        const fromDate = new Date(leaveRequest.FromDate);
+        if (fromDate.getUTCDay() === 0 || fromDate.getUTCDay() === 6) {
+          Swal.showValidationMessage("Sorry, From Date falls on a weekend!");
           return false;
         }
-
-        if (new Date(leaveRequest.ToDate).getUTCDay() == 0 || new Date(leaveRequest.ToDate).getUTCDay()== 6) {
-          Swal.showValidationMessage("Sorry ToDate it's weekends !");
-          return false; 
-        }
-
+  
         if (!leaveRequest.ToDate) {
           Swal.showValidationMessage('Please select a to date');
           return false;
         }
-        if (new Date(leaveRequest.ToDate) > new Date(leaveRequest.ToDate)) {
-          Swal.showValidationMessage('From date cannot be later than to date');
+  
+        const toDate = new Date(leaveRequest.ToDate);
+        if (toDate.getUTCDay() === 0 || toDate.getUTCDay() === 6) {
+          Swal.showValidationMessage("Sorry, To Date falls on a weekend!");
           return false;
         }
+  
+        if (toDate < fromDate) {
+          Swal.showValidationMessage('To date cannot be earlier than from date');
+          return false;
+        }
+        
         if (!leaveRequest.Reason.trim()) {
           Swal.showValidationMessage('Please enter a reason');
           return false;
         }
+        
         return leaveRequest;
       }
     });
   };
+  
 
 
  Show=(Reason)=> Swal.fire({

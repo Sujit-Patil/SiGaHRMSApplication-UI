@@ -19,7 +19,7 @@ import { Router } from '@angular/router';
 import { AlertService } from 'src/app/common/service/alert/alert.service';
 import { AuthService } from '../../service/authitication/auth.service';
 import { CommonService } from '../../service/common/common.service';
-import {  Attendance, Employee, RequestDto } from '../../datatypes/DataTypes';
+import { Attendance, Employee, RequestDto } from '../../datatypes/DataTypes';
 import { ClockComponent } from '../clock/clock.component';
 import { Api } from '../../enum/enum';
 
@@ -68,7 +68,6 @@ export default class DashboardComponent {
     attendanceDto.AttendanceDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
     attendanceDto.InTime = this.datePipe.transform(new Date(), "yyyy-MM-ddTHH:mm:ss.SSS'Z'");
     attendanceDto.EmployeeId = this.employee.EmployeeId;
-    attendanceDto.CreatedBy = this.employee.EmployeeId;
     this.apiService.post(Api.Attendance, attendanceDto).subscribe((data) => {
       this.getAttendanceByDate();
     });
@@ -76,12 +75,8 @@ export default class DashboardComponent {
 
   checkOut(): void {
     const currentAttendance = this.attendanceList.find((x) => x.Employee.CompanyEmail === this.employee.CompanyEmail);
-
     if (currentAttendance) {
       currentAttendance.OutTime = this.datePipe.transform(new Date(), "yyyy-MM-ddTHH:mm:ss.SSS'Z'");
-      currentAttendance.LastModifiedDateTime = this.datePipe.transform(new Date(), "yyyy-MM-ddTHH:mm:ss.SSS'Z'");
-      currentAttendance.LastModifiedBy = this.employee.EmployeeId;
-
       this.apiService.update(Api.Attendance, currentAttendance).subscribe(() => this.getAttendanceByDate());
     }
   }
@@ -107,7 +102,7 @@ export default class DashboardComponent {
     }
   }
   private async decodeJwt(): Promise<void> {
-    const { email: currentUserEmail } =await this.authService.decodeObjectFromBase64(localStorage.getItem('jwt'));
+    const { email: currentUserEmail } = await this.authService.decodeObjectFromBase64(localStorage.getItem('jwt'));
 
     this.apiService.getUsingEmail(Api.Employee, currentUserEmail).subscribe((data) => {
       this.employee = data;
