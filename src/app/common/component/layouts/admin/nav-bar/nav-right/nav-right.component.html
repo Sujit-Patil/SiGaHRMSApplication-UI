@@ -87,7 +87,7 @@
   <li class="dropdown pc-h-item header-user-profile" ngbDropdown>
     <a class="pc-head-link dropdown-toggle arrow-none me-0" ngbDropdownToggle>
       <img src="assets/images/user/avatar-2.jpg" alt="user-image" class="user-avtar" />
-      <span>{{email}}</span>
+      <span>{{User.email}}</span>
     </a>
     <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown" ngbDropdownMenu>
       <div class="dropdown-header">
@@ -96,8 +96,8 @@
             <img src="assets/images/user/avatar-2.jpg" alt="user-image" class="user-avtar wid-35" />
           </div>
           <div class="flex-grow-1 ms-3">
-            <h6 class="mb-1">{{email}}</h6>
-            <span>{{Role}}</span>
+            <h6 class="mb-1">{{User.email}}</h6>
+            <span>{{User.role}}</span>
           </div>
           <a href="javascript:" class="pc-head-link bg-transparent"><i class="ti ti-power text-danger"></i></a>
         </div>
@@ -107,7 +107,7 @@
           <a ngbNavLink><i class="ti ti-user"></i> Profile</a>
           <ng-template ngbNavContent>
             <div >
-              <a class="dropdown-item">
+              <a class="dropdown-item" (click)="DetailsEmployee(User.employeeId)" >
                 <i class="ti ti-user"></i>
                 <span>View Profile</span>
               </a>
@@ -118,10 +118,10 @@
                 <span>Edit Profile</span>
               </a>
             </div>
-            <div >
+            <div (click)="LogOut()" >
               <a class="dropdown-item">
                 <i class="ti ti-power"></i>
-                <span (click)="LogOut()">Logout</span>
+                <span >Logout</span>
               </a>
             </div>
           </ng-template>

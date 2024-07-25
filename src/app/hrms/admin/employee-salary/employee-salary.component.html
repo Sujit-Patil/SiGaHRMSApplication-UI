@@ -1,7 +1,7 @@
 <div class="row">
   <ul ngbNav #nav="ngbNav" class="nav-tabs">
     <li [ngbNavItem]="1">
-      <button ngbNavLink (click)="actionLink = 'list'"
+      <button ngbNavLink (click)="actionLink = 'month'; template = 'EmployeeSalary'"
         ><svg
           xmlns="http://www.w3.org/2000/svg"
           class="icon icon-tabler icon-tabler-user-square"
@@ -19,14 +19,58 @@
           <path d="M6 21v-1a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v1" />
           <path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z" />
         </svg>
-        All salaries</button
+        All Salaries</button
+      >
+    </li>
+    <li [ngbNavItem]="2">
+      <button ngbNavLink (click)="template = 'EmployeeSalaryStructure'; actionLink = 'year'"
+        ><svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="icon icon-tabler icon-tabler-user-square"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M9 10a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+          <path d="M6 21v-1a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v1" />
+          <path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z" />
+        </svg>
+        Annual Packages</button
+      >
+    </li>
+    <li [ngbNavItem]="3" (click)="actionLink = 'incentive'">
+      <button ngbNavLink
+        ><svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="icon icon-tabler icon-tabler-user-square"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M9 10a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+          <path d="M6 21v-1a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v1" />
+          <path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z" />
+        </svg>
+        All Incentives</button
       >
     </li>
   </ul>
-  <ng-template ngbNavContent [ngIf]="actionLink == 'list'">
+  <ng-template ngbNavContent [ngIf]="actionLink == 'month'">
     <div class="col-md-12 col-xl-8" style="width: 100%">
       <div class="d-flex justify-content-between align-items-center mb-2">
-        <h5 class="mb-3 mt-2">All salaries Details</h5>
+        <h5 class="mb-3 mt-2">All Salaries Details</h5>
         <div class="d-flex gap-2 align-items-end">
           <div>
             <label for=""><b>From Date :</b> </label>
@@ -39,11 +83,11 @@
           </div>
 
           <div class="get-btn ms-3">
-            <button class="btn btn-md btn-primary" (click)="getSalary()" >Get Salaries</button>
+            <button class="btn btn-md btn-primary" (click)="loadSalaries()">Get Salaries</button>
           </div>
         </div>
         <div>
-          <button class="btn btn-primary" (click)="actionLink='newSalary'">New Salary</button>
+          <button class="btn btn-primary" (click)="actionLink = 'newSalary'">New Salary</button>
         </div>
       </div>
       <div class="card tbl-card">
@@ -53,12 +97,16 @@
               <thead>
                 <tr class="text-center">
                   <th></th>
-                  <th>Id</th>
                   <th>Name</th>
+                  <th>SalaryForAMonth</th>
                   <th>Basic</th>
                   <th>Conveyance</th>
-                  <th>TDS</th>
-                  <th>HRA</th>
+                  <th>SpecialAllowance</th>
+                  <th>MedicalAllowance</th>
+                  <th>Leaves</th>
+                  <th>LeaveDeduction</th>
+                  <th>NetSalary</th>
+                  <th>GrossSalary</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -68,14 +116,19 @@
                     <div class="flex-shrink-0">
                       <img src="assets/images/user/avatar-2.jpg" alt="user-image" class="user-avtar wid-35" /> </div
                   ></td>
-                  <td>{{ employee.EmployeeId }}</td>
                   <td>{{ employee.Employee.FirstName }} {{ employee.Employee.LastName }}</td>
+                  <td>{{ employee.SalaryForAMonth | date: 'MMM d, y, h:mm a' }}</td>
                   <td>{{ employee.Basic }}</td>
                   <td>{{ employee.Conveyance }}</td>
-                  <td>{{ employee.TDS }}</td>
-                  <td>{{ employee.HRA }}</td>
+                  <td>{{ employee.SpecialAllowance }}</td>
+                  <td>{{ employee.MedicalAllowance }}</td>
+                  <td>{{ employee.Leaves }}</td>
+                  <td>{{ employee.LeaveDeduction }}</td>
+                  <td>{{ employee.NetSalary }}</td>
+                  <td>{{ employee.GrossSalary }}</td>
+
                   <td
-                    ><a class="btn btn-outline-success m-2" (click)="updateId = employee.EmployeeId ;actionLink='viewSalary'">
+                    ><a class="btn btn-outline-success m-2" (click)="updateId = employee.EmployeeId; actionLink = 'newSalary'">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -93,8 +146,147 @@
                         <path d="M6 21v-2a4 4 0 0 1 4 -4h1.5" />
                         <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
                         <path d="M20.2 20.2l1.8 1.8" /></svg></a>
-                    <a class="btn btn-outline-primary" (click)="updateId = employee.EmployeeId ; actionLink='updateSalary'"><i class="ti ti-edit"></i></a>
+                    <a class="btn btn-outline-primary" (click)="updateId = employee.EmployeeId; actionLink = 'updateSalary'"
+                      ><i class="ti ti-edit"></i
+                    ></a>
                     <a class="btn btn-outline-danger m-2" (click)="deleteEmployee(employee)"><i class="ti ti-trash"></i></a
+                  ></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template ngbNavContent [ngIf]="actionLink == 'year'">
+    <div class="col-md-12 col-xl-8" style="width: 100%">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-3 mt-2">All Yearly Packages</h5>
+        <div class="d-flex gap-2 align-items-end">
+          <div>
+            <label for=""><b>From Date :</b> </label>
+            <input type="date" class="form-control" [(ngModel)]="from" name="dp" />
+          </div>
+
+          <div>
+            <label for=""><b>To Date :</b> </label>
+            <input type="date" class="form-control" [(ngModel)]="to" [min]="from" name="kp" />
+          </div>
+
+          <div class="get-btn ms-3">
+            <button class="btn btn-md btn-primary" (click)="loadSalaries()">Get Salaries</button>
+          </div>
+        </div>
+        <div>
+          <button class="btn btn-primary" (click)="actionLink = 'newSalary'">New Salary</button>
+        </div>
+      </div>
+      <div class="card tbl-card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover table-borderless mb-0">
+              <thead>
+                <tr class="text-center">
+                  <th></th>
+                  <th>Name</th>
+                  <th>FromDate</th>
+                  <th>ToDate</th>
+                  <th>Basic</th>
+                  <th>Conveyance</th>
+                  <th>TDS</th>
+                  <th>HRA</th>
+                  <th>MedicalAllowance</th>
+                  <th>SpecialAllowance</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let employee of employeeSalaryStructures" class="text-center">
+                  <td>
+                    <div class="flex-shrink-0">
+                      <img src="assets/images/user/avatar-2.jpg" alt="user-image" class="user-avtar wid-35" /> </div
+                  ></td>
+                  <td>{{ employee.Employee.FirstName }} {{ employee.Employee.LastName }}</td>
+                  <td>{{ employee.FromDate | date }}</td>
+                  <td>{{ !employee.ToDate ? 'Not Yet Declared !' : (employee.ToDate | date) }}</td>
+                  <td>{{ employee.Basic }}</td>
+                  <td>{{ employee.Conveyance }}</td>
+                  <td>{{ employee.TDS }}</td>
+                  <td>{{ employee.HRA }}</td>
+                  <td>{{ employee.MedicalAllowance }}</td>
+                  <td>{{ employee.SpecialAllowance }}</td>
+
+                  <td
+                    ><a class="btn btn-outline-success m-2" (click)="updateId = employee.EmployeeId; actionLink = 'newSalary'">
+                      <i class="ti ti-file-plus"></i
+                    ></a>
+                    <a class="btn btn-outline-primary" (click)="updateId = employee.EmployeeId; actionLink = 'updateSalary'"
+                      ><i class="ti ti-edit"></i
+                    ></a>
+                    <a class="btn btn-outline-danger m-2" (click)="deleteEmployee(employee)"><i class="ti ti-trash"></i></a
+                  ></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template ngbNavContent [ngIf]="actionLink == 'incentive'">
+    <div class="col-md-12 col-xl-8" style="width: 100%">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-3 mt-2">All Yearly Incentives</h5>
+        <div class="d-flex gap-2 align-items-end">
+          <div>
+            <label for=""><b>From Date :</b> </label>
+            <input type="date" class="form-control" [(ngModel)]="from" />
+          </div>
+
+          <div>
+            <label for=""><b>To Date :</b> </label>
+            <input type="date" class="form-control" [(ngModel)]="to" [min]="from" />
+          </div>
+
+          <div class="get-btn ms-3">
+            <button class="btn btn-md btn-primary" (click)="getIncentive()">Get Incentive</button>
+          </div>
+        </div>
+        <div>
+          <button class="btn btn-primary" (click)="newIncentive()">New Incentive</button>
+        </div>
+      </div>
+      <div class="card tbl-card">
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover table-borderless mb-0">
+              <thead>
+                <tr class="text-center">
+                  <th></th>
+                  <th>Name</th>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>IncentivePurpose</th>
+                  <th>Description</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let incentive of incentives" class="text-center">
+                  <td>
+                    <div class="flex-shrink-0">
+                      <img src="assets/images/user/avatar-2.jpg" alt="user-image" class="user-avtar wid-35" /> </div
+                  ></td>
+                  <td>{{ incentive.Employee.FirstName }} {{ incentive.Employee.LastName }}</td>
+                  <td>{{ incentive.CreatedDateTime | date }}</td>
+                  <td>{{ incentive.Amount }}</td>
+                  <td>{{ incentive.IncentivePurpose.Purpose }}</td>
+                  <td>{{ incentive.Description }}</td>
+                  <td
+                    ><a class="btn btn-outline-success m-2" (click)="newIncentive(incentive.EmployeeId)"> <i class="ti ti-file-plus"></i></a>
+                    <a class="btn btn-outline-primary" (click)="updateIncentive(incentive)"><i class="ti ti-edit"></i></a>
+                    <a class="btn btn-outline-danger m-2"><i class="ti ti-trash"></i></a
                   ></td>
                 </tr>
               </tbody>
@@ -106,15 +298,19 @@
   </ng-template>
 
   <ng-template ngbNavContent [ngIf]="actionLink == 'newSalary'">
-    <app-employee-salary-form [employeeSalary]="employeeSalary" [template]="'EmployeeSalaryStructure'"></app-employee-salary-form>
+    <app-employee-salary-form
+      [employeeSalary]="template == 'EmployeeSalary' ? employeeSalary : employeeSalaryStructures"
+      [template]="template"
+      [newEntryId]="updateId"
+    ></app-employee-salary-form>
   </ng-template>
 
   <ng-template ngbNavContent [ngIf]="actionLink == 'updateSalary'">
-    <app-employee-salary-form [updateId]="updateId" [employeeSalary]="employeeSalary" [template]="'EmployeeSalaryStructure'"></app-employee-salary-form>
-  </ng-template>
-
-  <ng-template ngbNavContent [ngIf]="actionLink == 'viewSalary'">
-    <app-employee-salary-profile [updateId]="updateId" [employeeSalary]="employeeSalary" ></app-employee-salary-profile>
+    <app-employee-salary-form
+      [updateId]="updateId"
+      [employeeSalary]="template == 'EmployeeSalary' ? employeeSalary : employeeSalaryStructures"
+      [template]="template"
+    ></app-employee-salary-form>
   </ng-template>
 
   <div [ngbNavOutlet]="nav" class="mt-2"></div>

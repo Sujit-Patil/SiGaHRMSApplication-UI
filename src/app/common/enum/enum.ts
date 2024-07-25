@@ -16,6 +16,20 @@ export enum LeaveBalanceStatus {
   NotApplicable = 'NotApplicable'
 }
 
+export enum LeaveRequestStatus {
+  Open = 'Open',
+  Approved = 'Approved',
+  Rejected = 'Rejected'
+}
+
+export enum BillingType {
+  Hourly = 'Hourly',
+  Weekly = 'Weekly',
+  Monthly = 'Monthly',
+  Fixed = 'Fixed',
+  NonBillable = 'NonBillable'
+}
+
 export enum LeaveType {
   EarnedLeave = 'EarnedLeave',
   CasualLeave = 'CasualLeave',
@@ -43,6 +57,8 @@ export enum TaskType {
 export enum Api {
   Client = 'Client',
   Employee = 'Employee',
+  Incentive='Incentive',
+  IncentivePurpose='IncentivePurpose',
   EmployeeSalary = 'EmployeeSalary',
   EmployeeSalaryStructure = 'EmployeeSalaryStructure',
   Project = 'Project',
@@ -57,5 +73,22 @@ export enum Api {
   OfficeFest = 'OfficeFest',
   TimeSheet = 'TimeSheet',
   TimesheetDetail = 'TimesheetDetail',
-  TaskName = 'TaskName'
+  TaskName = 'TaskName',
+  BillingPlatform='BillingPlatform'
+}
+
+export enum UserRole {
+  SUPER_ADMIN = 'Super Admin',
+  MANAGEMENT = 'Management',
+  HR = 'HR',
+  SALES_MARKETING = 'Sales & Marketing',
+  ACCOUNTS_FINANCE = 'Accounts & Finance',
+  MANAGER = 'Manager',
+  QA = 'QA',
+  DEVELOPER = 'Developer'
+}
+
+export enum ClientStatus {
+  Active = 'Active',
+  Inactive = 'Inactive'
 }

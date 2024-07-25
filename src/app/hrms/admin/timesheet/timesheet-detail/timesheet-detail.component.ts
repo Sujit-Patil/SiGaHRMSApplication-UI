@@ -95,6 +95,8 @@ export class TimesheetDetailComponent {
         });
       }
       this.taskArray = Object.values(daySheetMap);
+
+      console.log(this.taskArray);
     });
   }
 
@@ -110,6 +112,13 @@ export class TimesheetDetailComponent {
     return taskArrayMap.get(TaskId) || 0;
   }
 
+  viewTask(daySheet: DaySheet) {
+    Swal.fire({
+      inputLabel: 'Message',
+      html: this.getTaskHtml(daySheet),
+      didOpen: () => this.setupTaskInputs(daySheet)
+    });
+  }
   async task(daySheet: DaySheet) {
     const { value: text } = await Swal.fire({
       inputLabel: 'Message',
@@ -128,7 +137,6 @@ export class TimesheetDetailComponent {
     return `
 
     <style>
-    
         .borderless-input {
           border: none;
           outline: none;
@@ -180,7 +188,7 @@ export class TimesheetDetailComponent {
           </tbody>
         </table>
       </div>
-      <div class="mt-2"> Total : ${this.getDayHours(daySheet.Date)}</div>
+      <div class="mt-2"> Total : ${daySheet.Time}</div>
     `;
   }
 
@@ -430,17 +438,53 @@ export class TimesheetDetailComponent {
   }
 
   async addTask() {
-    await this.alertService.Task().then((data) => {
-      if (data.isConfirmed) {
-        var newtask = new TaskName();
-        newtask.TaskDetails = data.value;
-        this.apiService.post(Api.TaskName, newtask).subscribe(async (data) => {
-          console.log(data);
+    const clients = await this.loadCilents();
+    const projects = await this.loadProjects();
+    const task = new TaskName();
+    const alertResult = await this.alertService.taskRequestAlert(task, clients, projects);
 
-          await this.alertService.Toast().fire({ icon: 'success', title: 'Task Added Successfully' });
-          await this.getTimesheetDetail();
-        });
-      }
-    });
+    if (alertResult.isConfirmed) {
+      this.apiService.post(Api.TaskName, task).subscribe((data) => {
+        if (data.IsValid) {
+          this.alertService
+            .Toast()
+            .fire({ icon: 'success', title: 'Task Added Successfully' })
+            .then(async (data) => {
+              if (data.dismiss) {
+                await this.getTimesheetDetail();
+              }
+            });
+        }
+      });
+    }
+  }
+
+  async updateTask(task: TaskName) {
+    const clients = await this.loadCilents();
+    const projects = await this.loadProjects();
+    const alertResult = await this.alertService.taskRequestAlert(task, clients, projects);
+
+    if (alertResult.isConfirmed) {
+      this.apiService.post(Api.TaskName, task).subscribe((data) => {
+        if (data.IsValid) {
+          this.alertService
+            .Toast()
+            .fire({ icon: 'success', title: 'Task Added Successfully' })
+            .then(async (data) => {
+              if (data.dismiss) {
+                await this.getTimesheetDetail();
+              }
+            });
+        }
+      });
+    }
+  }
+
+  loadCilents() {
+    return this.apiService.getAll(Api.Client).toPromise();
+  }
+
+  loadProjects() {
+    return this.apiService.getAll(Api.Project).toPromise();
   }
 }

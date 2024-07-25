@@ -106,6 +106,27 @@ export class CommonService {
     return date;
   }
 
+  getMiddleDates(start: string | Date, end: string | Date): string[] {
+    const middleDates = [];
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    for (let currentDate = new Date(startDate); currentDate <= endDate; currentDate.setDate(currentDate.getDate() + 1)) {
+      middleDates.push(this.datePipe.transform(currentDate, 'yyyy-MM-dd'));
+    }
+    return middleDates;
+  }
+
+  getWeekRange(date: Date) {
+    const startOfWeek = new Date(date);
+    startOfWeek.setDate(date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1));
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+    return {
+      startOfWeek: this.datePipe.transform(startOfWeek, 'yyyy-MM-dd'),
+      endOfWeek: this.datePipe.transform(endOfWeek, 'yyyy-MM-dd')
+    };
+  }
+
   calculateWorkedTimeinSeconds(inTime: any, outTime: any): number {
     if (!outTime) {
       outTime = new Date();

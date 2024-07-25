@@ -40,7 +40,7 @@
             <button class="btn btn-md btn-primary" (click)="getTimeSheets()">Get Timesheets</button>
           </div>
         </div>
-        <div class="btn-group">
+        <div *ngIf="user.role!=userRole.SUPER_ADMIN" class="btn-group">
           <button class="btn btn-primary" (click)="actionLink = 'addTask'"> Log Time </button>
         </div>
       </div>

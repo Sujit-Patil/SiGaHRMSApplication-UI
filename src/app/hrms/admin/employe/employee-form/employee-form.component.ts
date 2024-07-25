@@ -26,7 +26,7 @@ export class EmployeeFormComponent {
     private ApiService: ApiService,
     private datePipe: DatePipe,
     private authService: AuthService,
-    private alertService:AlertService
+    private alertService: AlertService
   ) {}
 
   ngOnInit() {
@@ -41,18 +41,18 @@ export class EmployeeFormComponent {
   addEmployee() {
     this.ApiService.post(Api.Employee, this.employeeDto).subscribe((data) => {
       this.alertService
-      .Toast()
-      .fire({ icon: 'success', title: 'New Employee Added Successfully' })
-      .then((data) => (data.dismiss ? window.location.reload() : ''));
+        .Toast()
+        .fire({ icon: 'success', title: 'New Employee Added Successfully' })
+        .then((data) => (data.dismiss ? window.location.reload() : ''));
     });
   }
 
   updateEmployee() {
     this.ApiService.update(Api.Employee, this.employeeDto).subscribe((data) => {
       this.alertService
-      .Toast()
-      .fire({ icon: 'success', title: 'Employee Updated Successfully' })
-      .then((data) => (data.dismiss ? window.location.reload() : ''));
+        .Toast()
+        .fire({ icon: 'success', title: 'Employee Updated Successfully' })
+        .then((data) => (data.dismiss ? window.location.reload() : ''));
     });
   }
 }

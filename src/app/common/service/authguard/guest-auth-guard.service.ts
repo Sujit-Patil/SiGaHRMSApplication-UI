@@ -1,24 +1,32 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, CanActivate, Router } from '@angular/router';
 import { AuthService } from '../authitication/auth.service';
+import { userRoles } from '../../constantss/const';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GuestAuthGuardService {
-  role: any;
-  constructor(private authService: AuthService) {}
+export class GuestAuthGuardService implements CanActivate {
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
-  async canActivate(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Promise<Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree> {
+  async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree> {
+    const jwtToken = localStorage.getItem('jwt');
 
-    if ((!!localStorage.getItem('jwt') && 'User' === await this.authService.decodeObjectFromBase64(localStorage.getItem('jwt'))['role'])) {
-      return true;
+    if (jwtToken) {
+      const decodedToken = await this.authService.decodeObjectFromBase64(jwtToken);
+      const role = decodedToken['role'];
+      if (userRoles.includes(role)) {
+        return true;
+      } else {
+        this.authService.logout();
+        this.router.navigate(['/login']); 
+        return false;
+      }
     } else {
-      this.authService.logout();
+      this.router.navigate(['/login']);
       return false;
     }
   }

@@ -46,7 +46,8 @@
               <path d="M5 12h9" />
               <path d="M11 16h-6" />
               <path d="M15 16h6" />
-              <path d="M18 13v6" /></svg></button>
+              <path d="M18 13v6" /></svg
+          ></button>
         </div>
       </div>
       <div class="card tbl-card">
@@ -69,14 +70,16 @@
                 <tr *ngFor="let employee of employees" class="text-center">
                   <td>
                     <div class="flex-shrink-0">
-                      <img src="assets/images/user/avatar-2.jpg" alt="user-image" class="user-avtar wid-35" /> </div></td>
+                      <img src="assets/images/user/avatar-2.jpg" alt="user-image" class="user-avtar wid-35" /> </div
+                  ></td>
                   <td>{{ employee.EmployeeId }}</td>
                   <td>{{ employee.FirstName }} {{ employee.LastName }}</td>
                   <td>{{ employee.CurrentDesignation }}</td>
                   <td>{{ employee.CurrentDesignation }}</td>
                   <td>{{ employee.PersonalEmail }}</td>
                   <td>{{ employee.DateOfJoining | date }}</td>
-                  <td><a class="btn btn-outline-success m-2" (click)="DetailsEmployee(employee.EmployeeId)">
+                  <td
+                    ><a class="btn btn-outline-success m-2" (click)="DetailsEmployee(employee.EmployeeId)">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -93,9 +96,11 @@
                         <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
                         <path d="M6 21v-2a4 4 0 0 1 4 -4h1.5" />
                         <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
-                        <path d="M20.2 20.2l1.8 1.8" />
-                        </svg></a>
-                    <a class="btn btn-outline-primary" (click)="this.updateId = employee.EmployeeId;this.activeSection = 'update'"><i class="ti ti-edit"></i></a>
+                        <path d="M20.2 20.2l1.8 1.8" /></svg
+                    ></a>
+                    <a class="btn btn-outline-primary" (click)="this.updateId = employee.EmployeeId; this.activeSection = 'update'"
+                      ><i class="ti ti-edit"></i
+                    ></a>
                     <a class="btn btn-outline-danger m-2" (click)="deleteEmployee(employee)"><i class="ti ti-trash"></i></a
                   ></td>
                 </tr>
@@ -111,11 +116,7 @@
   </ng-template>
 
   <ng-template ngbNavContent [ngIf]="activeSection == 'update'">
-    <app-employee-form [updateId]="updateId"  [employees]="employees"></app-employee-form>
-  </ng-template>
-
-  <ng-template ngbNavContent [ngIf]="activeSection == 'profile'">
-    <app-employee-profile [updateId]="updateId" ></app-employee-profile>
+    <app-employee-form [updateId]="updateId" [employees]="employees"></app-employee-form>
   </ng-template>
 
   <div [ngbNavOutlet]="nav" class="mt-2"></div>

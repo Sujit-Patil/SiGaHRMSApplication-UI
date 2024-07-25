@@ -4,7 +4,8 @@ import { SharedModule } from 'src/app/common/component/module/shared.module';
 import { RequestDto, TimeSheet, TimeSheetDetail, timeSheetStatusOptions, timeSheetTypeOptions } from 'src/app/common/datatypes/DataTypes';
 import { ApiService } from 'src/app/common/service/api/api-service.service';
 import { TimesheetDetailComponent } from './timesheet-detail/timesheet-detail.component';
-import { Api, TimeSheetStatus, TimeSheetType } from 'src/app/common/enum/enum';
+import { Api, TimeSheetStatus, TimeSheetType, UserRole } from 'src/app/common/enum/enum';
+import { AuthService } from 'src/app/common/service/authitication/auth.service';
 
 @Component({
   selector: 'app-timesheet',
@@ -26,10 +27,13 @@ export default class TimesheetComponent {
   timeSheetStatusOptions = timeSheetStatusOptions;
   timeSheetStatusConst = TimeSheetStatus.All;
   timeSheetStatus = TimeSheetStatus;
+  userRole = UserRole;
+  user = this.authService.decodeObjectFromBase64(localStorage.getItem('jwt'));
 
   constructor(
     private apiService: ApiService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {

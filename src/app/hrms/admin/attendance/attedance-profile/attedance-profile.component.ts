@@ -1,7 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, Input, ViewChild } from '@angular/core';
 import { ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
-import { ChartOptions } from 'src/app/common/component/dashboard/dashboard.component';
 import { SharedModule } from 'src/app/common/component/module/shared.module';
 import { Attendance, RequestDto } from 'src/app/common/datatypes/DataTypes';
 import { ApiService } from 'src/app/common/service/api/api-service.service';
@@ -12,6 +11,7 @@ import ApexCharts from 'apexcharts';
 import { NgbNavChangeEvent } from '@ng-bootstrap/ng-bootstrap';
 import { Api } from 'src/app/common/enum/enum';
 import { Subscription, interval } from 'rxjs';
+import { ChartOptions } from 'src/app/common/component/user-chart/user-chart.component';
 
 @Component({
   selector: 'app-attedance-profile',

@@ -3,6 +3,8 @@ import { ApiService } from '../api/api-service.service';
 import { Router } from '@angular/router';
 import { AlertService } from '../alert/alert.service';
 import { jwtDecode } from 'jwt-decode';
+import { userRoles } from '../../constantss/const';
+import { UserRole } from '../../enum/enum';
 
 @Injectable({
   providedIn: 'root'
@@ -23,11 +25,10 @@ export class AuthService {
         localStorage.setItem('jwt', Result);
         this.role = jwtDecode(Result)['role'];
         console.log(this.role);
-
-        if (this.role == 'Super Admin') {
+        if (this.role == UserRole.HR|| this.role == UserRole.SUPER_ADMIN) {
           this.router.navigate(['admin/dashboard']);
-        } else if (this.role == 'User') {
-          this.router.navigate(['guest/dashboard']);
+        } else if (userRoles.includes(this.role)) {
+          this.router.navigate(['guest/leave']);
         } else {
           this.logout();
         }

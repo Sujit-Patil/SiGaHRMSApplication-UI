@@ -17,10 +17,6 @@ import { CommonService } from '../../service/common/common.service';
 export default class LoginComponent {
   constructor(
     private Auth: AuthService,
-    private ApiService: ApiService,
-    private CommonService: CommonService,
-    private router: Router,
-    private AlertService: AlertService
   ) {}
 
   User: any = {

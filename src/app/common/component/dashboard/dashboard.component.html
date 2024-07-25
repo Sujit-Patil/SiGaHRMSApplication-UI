@@ -1,50 +1,83 @@
-<div class="row">
-  <!-- [ sample-page ] start -->
-  <div class="col-md-6 col-xl-3">
-    <div class="card">
-      <div class="card-body">
-        <h6 class="mb-2 f-w-400 text-muted">Total Employee</h6>
-        <h4 class="mb-3">
-          <span class="badge bg-light-primary border border-primary"><i class="ti ti-trending-up"></i>0</span>
-        </h4>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6 col-xl-3">
-    <div class="card">
-      <div class="card-body">
-        <h6 class="mb-2 f-w-400 text-muted">Total Attedance</h6>
-        <h4 class="mb-3">
-          0
-          <span class="badge bg-light-success border border-success"><i class="ti ti-trending-up"></i> 0</span>
-        </h4>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6 col-xl-3">
-    <div class="card">
-      <div class="card-body">
-        <h6 class="mb-2 f-w-400 text-muted">Pending Leave Approval</h6>
-        <h4 class="mb-3">
-          0
-          <span class="badge bg-light-warning border border-warning"><i class="ti ti-trending-down"> </i>0 </span>
-        </h4>
-      </div>
-    </div>
-  </div>
+<h1>Today Leave Request Server Side Logic as well scripting side logic Need To Be done </h1>
+<p class="marquee">
+  <span class="text-danger">
+    * Windows 8 and Windows RT are focused on your life—your friends and family, your apps, and your stuff. With new things like the Start
+    screen, charms and a Microsoft account, you can spend less time searching and more time doing.
+  </span>
+</p>
+<div *ngIf="userRole.SUPER_ADMIN == currentUser.role" class="row">
+  <app-admin-chart></app-admin-chart>
+</div>
 
-  <div class="col-md-6 col-xl-3">
+<div *ngIf="userRole.SUPER_ADMIN != currentUser.role" class="row">
+  <app-user-chart></app-user-chart>
+</div>
+
+<div class="row">
+  <div class="col-sm-6 col-md-6 col-xl-6 col-12">
+    <h5 class="mb-3">Transaction History</h5>
     <div class="card">
-      <div class="card-body">
-        <h6 class="mb-2 f-w-400 text-muted text-center">Attendance</h6>
-        <h4 class="mb-2 d-flex justify-content-around">
-          <button class="btn btn-outline-secondary"><app-clock></app-clock></button>
-          <div [ngSwitch]="attendanceButton">
-            <button *ngSwitchCase="'InTime'" class="btn btn-primary" (click)="checkIn()">Check-In</button>
-            <button *ngSwitchCase="'OutTime'" class="btn btn-danger" (click)="checkOut()">Check-Out</button>
-            <button *ngSwitchCase="'Completed'" class="btn btn-success">Completed</button>
+      <div class="list-group list-group-flush">
+        <a href="javascript:" class="list-group-item list-group-item-action" *ngFor="let history of transaction">
+          <div class="d-flex">
+            <div class="flex-shrink-0">
+              <div class="avtar avtar-s rounded-circle {{ history.background }}">
+                <i class="{{ history.icon }} f-18"></i>
+              </div>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <h6 class="mb-1">{{ history.title }}</h6>
+              <p class="mb-0 text-muted">{{ history.time }}</p>
+            </div>
+            <div class="flex-shrink-0 text-end">
+              <h6 class="mb-1">{{ history.amount }}</h6>
+              <p class="mb-0 text-muted">{{ history.percentage }}</p>
+            </div>
           </div>
-        </h4>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-6 col-xl-6 col-12">
+    <h5 class="mb-3">Unique Visitor</h5>
+    <div class="card">
+      <div id="carouselExampleIndicators" class="carousel slide fixed-height-carousel" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img class="d-block w-100" src="https://picsum.photos/2000/2000" alt="First slide" />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>kwqegde</h5>
+              <p>dvw2db</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img class="d-block w-100" src="https://picsum.photos/id/237/2000/2000" alt="Second slide" />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>afdsuyfqwdv</h5>
+              <p>wddgvqwv</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img class="d-block w-100" src="https://picsum.photos/id/238/2000/2000" alt="Third slide" />
+            <div class="carousel-caption d-none d-md-block">
+              <h5>wqgdgqw</h5>
+              <p>wdqjgdqb</p>
+            </div>
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+          <span class="sr-only">Previous</span>
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
       </div>
     </div>
   </div>

@@ -18,7 +18,7 @@ import { AuthService } from 'src/app/common/service/authitication/auth.service';
 })
 export default class AttendanceComponent implements AfterViewInit, OnDestroy {
   @ViewChild('attedanceProfile') attedanceProfileComponent!: AttedanceProfileComponent;
-  today: string = this.datePipe.transform(new Date(), 'yyyy-MM-dd')!;
+  today: string = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
   attendancelist: Attendance[] = [];
   allAtedanceList: Attendance[] = [];
   activeLink: string = 'list';
@@ -35,7 +35,7 @@ export default class AttendanceComponent implements AfterViewInit, OnDestroy {
     private commonService: CommonService,
     private authService: AuthService
   ) {
-    this.fetchAttendanceData();
+    
   }
 
   async ngAfterViewInit(): Promise<void> {
@@ -46,24 +46,8 @@ export default class AttendanceComponent implements AfterViewInit, OnDestroy {
     this.commonService.exportToCsv(this.attendancelist, `Attendance-${this.today}.csv`);
   }
 
-  async checkIn(): Promise<void> {
-    await this.attedanceProfileComponent.checkIn();
-    this.setAttendanceButton();
-  }
-
-  async checkOut(): Promise<void> {
-    if (this.attedanceProfileComponent) {
-      await this.attedanceProfileComponent.checkOut();
-      this.setAttendanceButton();
-    } else {
-      console.error('AttendanceProfileComponent is not available');
-    }
-  }
-
   async setChildList(employeeId: number, date: string): Promise<void> {
     this.childAttendancelist = this.filterAndSortAttendances(employeeId, date, 'CreatedDateTime', 'asc');
-    console.log(this.childAttendancelist);
-    
   }
 
   getAttendanceTime(employeeId: number, date: string, timeType: 'InTime' | 'OutTime', sortOrder: 'asc' | 'desc'): Attendance | undefined {

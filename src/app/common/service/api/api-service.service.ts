@@ -38,5 +38,8 @@ export class ApiService {
   getByDate(route: string,body:any){
     return this.http.post<any>(`http://localhost:5238/api/${route}/ByDate`,body)
   }
-  
+
+  updateLeaveRequestStatus(route: string,body:any){
+    return this.http.put<any>(`http://localhost:5238/api/${route}/update_leaverequest_status`,body)
+  }
 }

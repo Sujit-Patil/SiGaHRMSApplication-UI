@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { AlertService } from 'src/app/common/service/alert/alert.service';
 import { ApiService } from 'src/app/common/service/api/api-service.service';
 import { EmployeeFormComponent } from './employee-form/employee-form.component';
-import { EmployeeProfileComponent } from './employee-profile/employee-profile.component';
 import { Employee } from 'src/app/common/datatypes/DataTypes';
 import { CommonService } from 'src/app/common/service/common/common.service';
 import { SharedModule } from 'src/app/common/component/module/shared.module';
@@ -16,7 +15,7 @@ import { AuthService } from 'src/app/common/service/authitication/auth.service';
   standalone: true,
   templateUrl: './employee.component.html',
   styleUrls: ['./employee.component.scss'],
-  imports: [CommonModule, SharedModule, EmployeeFormComponent, EmployeeProfileComponent]
+  imports: [CommonModule, SharedModule, EmployeeFormComponent]
 })
 export default class EmployeeComponent {
   activeSection: string = 'list';
@@ -61,7 +60,6 @@ export default class EmployeeComponent {
   }
 
   DetailsEmployee(Id: number) {
-    this.updateId = Id;
-    this.activeSection = 'profile';
+    this.router.navigate(['admin/profile', Id]);
   }
 }

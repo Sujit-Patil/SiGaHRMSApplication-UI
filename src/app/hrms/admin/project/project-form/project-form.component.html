@@ -1,0 +1,76 @@
+<div class="card mt-5">
+  <div class="card-body">
+    <div class="d-flex justify-content-between">
+      <h3><b>Add Project Information</b></h3>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12 col-md-6 col-lg-4">
+        <div class="form-group mb-3">
+          <label class="form-label" for="WeeklyLimit">Title*</label>
+          <input type="text" class="form-control" id="WeeklyLimit" required [(ngModel)]="project.Title" name="Title" />
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6 col-lg-4">
+        <div class="form-group mb-3">
+          <label class="form-label" for="WeeklyLimit">Start Date*</label>
+          <input type="date" class="form-control" id="WeeklyLimit" required [(ngModel)]="project.StartDate" name="StartDate" />
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6 col-lg-4">
+        <div class="form-group mb-3">
+          <label class="form-label" for="WeeklyLimit">End Date</label>
+          <input type="date" class="form-control" id="WeeklyLimit" required [(ngModel)]="project.EndDate" name="EndDate" />
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6 col-lg-4">
+        <div class="form-group mb-3">
+          <label class="form-label" for="EmployeeId">Billing Platform*</label>
+          <select class="form-control" id="EmployeeId" required [(ngModel)]="project.BillingPlatformId" name="EmployeeId">
+            <option *ngFor="let platform of billingPlatform" [value]="platform.BillingPlatformId">
+              {{ platform.Name }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6 col-lg-4">
+        <div class="form-group mb-3">
+          <label class="form-label" for="EmployeeId">BillingType*</label>
+          <select class="form-control" id="EmployeeId" required [(ngModel)]="project.BillingType" name="EmployeeId">
+            <option *ngFor="let type of billingType" [value]="type.value">
+              {{ type.label }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6 col-lg-4">
+        <div class="form-group mb-3">
+          <label class="form-label" for="LeaveBalanceStatus">Cilent*</label>
+          <select class="form-control" id="LeaveBalanceStatus" required [(ngModel)]="project.ClientId" name="LeaveBalanceStatus">
+            <option *ngFor="let client of clients" [value]="client.ClientId">{{ client.Name }}</option>
+          </select>
+        </div>
+      </div>
+      <div *ngFor="let prop of ['RateINR', 'RateUSD', 'WeeklyLimit']; let i = index" class="col-sm-12 col-md-6 col-lg-4">
+        <div class="form-group mb-3">
+          <label class="form-label" [for]="prop">{{ prop }}{{ '*' }}</label>
+          <input
+            type="number"
+            class="form-control"
+            [id]="prop"
+            [placeholder]="prop"
+            [required]="prop"
+            [(ngModel)]="project[prop]"
+            [name]="prop"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="d-grid mt-3" *ngIf="!updateId">
+      <button type="button" class="btn btn-primary" (click)="addProject()">Add Project</button>
+    </div>
+    <div class="d-grid mt-3" *ngIf="updateId">
+        <button type="button" class="btn btn-primary" (click)="updateProject()">Update Project</button>
+      </div>
+  </div>
+</div>

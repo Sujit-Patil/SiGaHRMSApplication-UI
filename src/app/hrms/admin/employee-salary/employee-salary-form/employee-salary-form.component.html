@@ -2,10 +2,44 @@
   <div class="card">
     <div class="card-body">
       <div class="d-flex justify-content-between">
-        <h3 *ngIf="updateId !== undefined"><b>Update Employee Salary Information</b></h3>
-        <h3 *ngIf="updateId === undefined"><b>Add Employee Salary Information</b></h3>
+        <div>
+          <h3 *ngIf="updateId !== undefined"><b>Salary Information</b></h3>
+          <h3 *ngIf="updateId === undefined"><b>Salary Information</b></h3>
+        </div>
+        <div>
+          <div *ngIf="template !== 'EmployeeSalaryStructure'">
+            <div class="form-group mb-3">
+              <label class="form-label" for="SalaryForAMonth">Salary Month</label>
+              <input
+                type="date"
+                [(ngModel)]="employeeSalaryDto.SalaryForAMonth"
+                class="form-control"
+                id="SalaryForAMonth"
+                placeholder="SalaryForAMonth"
+              />
+            </div>
+          </div>
+        </div>
       </div>
       <div class="row">
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="form-label" for="EmployeeId">Employee ID*</label>
+            <select
+              [(ngModel)]="employeeSalaryDto.EmployeeId"
+              class="form-control"
+              #Employee="ngModel"
+              required
+              id="Employee"
+              placeholder="Select Employee"
+              (change)="getData(employeeSalaryDto.EmployeeId)"
+            >
+              <option *ngFor="let employee of employees" [value]="employee.EmployeeId">{{
+                employees.length == 0 ? 'No New Employee Exites' : employee.FirstName + ' ' + employee.LastName
+              }}</option>
+            </select>
+          </div>
+        </div>
         <div class="col-md-4">
           <div class="form-group mb-3">
             <label class="form-label" for="Basic">Basic Salary*</label>
@@ -33,9 +67,7 @@
             <input type="number" [(ngModel)]="employeeSalaryDto.DA" class="form-control" id="DA" placeholder="DA" />
           </div>
         </div>
-      </div>
 
-      <div class="row">
         <div class="col-md-4">
           <div class="form-group mb-3">
             <label class="form-label" for="Conveyance">Conveyance</label>
@@ -61,64 +93,17 @@
             <label class="form-label" for="SpecialAllowance">Special Allowance</label>
             <input
               type="number"
-              [(ngModel)]="employeeSalaryDto.SpecialAllowance"
               class="form-control"
               id="SpecialAllowance"
               placeholder="Special Allowance"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-4">
-          <div class="form-group mb-3">
-            <label class="form-label" for="PT">PT</label>
-            <input type="number" [(ngModel)]="employeeSalaryDto.PT" class="form-control" id="PT" placeholder="PT" />
-          </div>
-        </div>
-
-        <div class="col-md-4">
-          <div class="form-group mb-3">
-            <label class="form-label" for="TDS">TDS</label>
-            <input type="number" [(ngModel)]="employeeSalaryDto.TDS" class="form-control" id="TDS" placeholder="TDS" />
-          </div>
-        </div>
-
-        <div class="col-md-4">
-          <div class="form-group mb-3">
-            <label class="form-label" for="EmployeeId">Employee ID*</label>
-            <select
-              [(ngModel)]="employeeSalaryDto.EmployeeId"
-              class="form-control"
-              #Employee="ngModel"
-              required
-              id="Employee"
-              placeholder="Select Employee"
-            >
-              <option *ngFor="let employee of employees" [value]="employee.EmployeeId">{{
-                employees.length ? 'No New Employee Exites' : employee.FirstName + ' ' + employee.LastName
-              }}</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="row" *ngIf="template !== 'EmployeeSalaryStructure'">
-        <div class="col-md-4">
-          <div class="form-group mb-3">
-            <label class="form-label" for="OtherDeduction">Other Deduction</label>
-            <input
-              type="number"
-              [(ngModel)]="employeeSalaryDto.OtherDeduction"
-              class="form-control"
-              id="OtherDeduction"
-              placeholder="Other Deduction"
+              step="0.01"
+              (input)="formatInputValue($event)"
+              [(ngModel)]="employeeSalaryDto.SpecialAllowance"
             />
           </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4" *ngIf="template !== 'EmployeeSalaryStructure'">
           <div class="form-group mb-3">
             <label class="form-label" for="DaysInAMonth">Days In a Month</label>
             <input
@@ -131,7 +116,7 @@
           </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4" *ngIf="template !== 'EmployeeSalaryStructure'">
           <div class="form-group mb-3">
             <label class="form-label" for="PresentDays">Present Days</label>
             <input
@@ -143,17 +128,53 @@
             />
           </div>
         </div>
-      </div>
 
-      <div class="row" *ngIf="template !== 'EmployeeSalaryStructure'">
+        <div class="col-md-4" *ngIf="template !== 'EmployeeSalaryStructure'">
+          <div class="form-group mb-3">
+            <label class="form-label" for="PT">PT</label>
+            <input type="number" [(ngModel)]="employeeSalaryDto.PT" class="form-control" id="PT" placeholder="PT" />
+          </div>
+        </div>
+
         <div class="col-md-4">
+          <div class="form-group mb-3">
+            <label class="form-label" for="TDS">TDS</label>
+            <input type="number" [(ngModel)]="employeeSalaryDto.TDS" class="form-control" id="TDS" placeholder="TDS" />
+          </div>
+        </div>
+        <div class="col-md-4" *ngIf="template !== 'EmployeeSalaryStructure'">
           <div class="form-group mb-3">
             <label class="form-label" for="Leaves">Leaves</label>
             <input type="number" [(ngModel)]="employeeSalaryDto.Leaves" class="form-control" id="Leaves" placeholder="Leaves" />
           </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4" *ngIf="template == 'EmployeeSalary'">
+          <div class="form-group mb-3">
+            <label class="form-label" for="LeaveDeduction">Leave Deduction</label>
+            <input
+              type="number"
+              [(ngModel)]="employeeSalaryDto.LeaveDeduction"
+              class="form-control"
+              id="LeaveDeduction"
+              placeholder="Leave Deduction"
+            />
+          </div>
+        </div>
+        <div class="col-md-4" *ngIf="template !== 'EmployeeSalaryStructure'">
+          <div class="form-group mb-3">
+            <label class="form-label" for="OtherDeduction">Other Deduction</label>
+            <input
+              type="number"
+              [(ngModel)]="employeeSalaryDto.OtherDeduction"
+              class="form-control"
+              id="OtherDeduction"
+              placeholder="Other Deduction"
+            />
+          </div>
+        </div>
+
+        <div class="col-md-4" *ngIf="template !== 'EmployeeSalaryStructure'">
           <div class="form-group mb-3">
             <label class="form-label" for="GrossSalary">Gross Salary</label>
             <input
@@ -166,25 +187,10 @@
           </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4" *ngIf="template !== 'EmployeeSalaryStructure'">
           <div class="form-group mb-3">
             <label class="form-label" for="NetSalary">Net Salary</label>
             <input type="number" [(ngModel)]="employeeSalaryDto.NetSalary" class="form-control" id="NetSalary" placeholder="Net Salary" />
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-4">
-          <div class="form-group mb-3">
-            <label class="form-label" for="LeaveDeduction">Leave Deduction</label>
-            <input
-              type="number"
-              [(ngModel)]="employeeSalaryDto.LeaveDeduction"
-              class="form-control"
-              id="LeaveDeduction"
-              placeholder="Leave Deduction"
-            />
           </div>
         </div>
 
@@ -202,32 +208,18 @@
             />
           </div>
         </div>
-        <div class="col-md-4" *ngIf="template == 'EmployeeSalaryStructure'">
-          <div class="form-group mb-3">
-            <label class="form-label" for="ToDate">To Date*</label>
-            <input
-              type="date"
-              [(ngModel)]="employeeSalaryDto.ToDate"
-              #ToDate="ngModel"
-              required
-              class="form-control"
-              id="ToDate"
-              placeholder="To Date"
-            />
-          </div>
-        </div>
       </div>
       <div *ngIf="template == 'EmployeeSalaryStructure'">
         <div *ngIf="updateId == undefined" class="d-grid mt-3">
-          <button type="button" class="btn btn-primary" (click)="addEmployeeSalaryStructure()"> Add Salary </button>
+          <button type="button" class="btn btn-primary" (click)="addEmployeeSalaryStructure()"> Add Employee Salary Structure </button>
         </div>
         <div *ngIf="updateId != undefined" class="d-grid mt-3">
-          <button type="button" class="btn btn-primary" (click)="updateEmployeeSalaryStructure()"> Update Salary </button>
+          <button type="button" class="btn btn-primary" (click)="updateEmployeeSalaryStructure()"> Update Salary Structure </button>
         </div>
       </div>
       <div *ngIf="template == 'EmployeeSalary'">
         <div *ngIf="updateId == undefined" class="d-grid mt-3">
-          <button type="button" class="btn btn-primary" (click)="addEmployeeSalary()"> Add Salary </button>
+          <button type="button" class="btn btn-primary" (click)="addEmployeeSalary()"> Add Employee Salary </button>
         </div>
         <div *ngIf="updateId != undefined" class="d-grid mt-3">
           <button type="button" class="btn btn-primary" (click)="updateEmployeeSalary()"> Update Salary </button>

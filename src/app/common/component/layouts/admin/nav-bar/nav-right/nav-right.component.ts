@@ -5,6 +5,7 @@ import { Employee, NotificationDto } from 'src/app/common/datatypes/DataTypes';
 import { AuthService } from 'src/app/common/service/authitication/auth.service';
 import { ApiService } from 'src/app/common/service/api/api-service.service';
 import { CommonService } from 'src/app/common/service/common/common.service';
+import { UserRole } from 'src/app/common/enum/enum';
 @Component({
   selector: 'app-nav-right',
   templateUrl: './nav-right.component.html',
@@ -12,24 +13,31 @@ import { CommonService } from 'src/app/common/service/common/common.service';
 })
 export class NavRightComponent {
   employee: Employee;
-  Role: any;
-  email: any;
   notification: NotificationDto[] = [];
   time: string;
   NotifictionBar = true;
+  User: any;
+  UserRole = UserRole;
   constructor(
     private AuthService: AuthService,
-    private ApiService: ApiService,
+    private apiService: ApiService,
     private router: Router,
     private datePipe: DatePipe,
-    private CommonService: CommonService
+    private commonService: CommonService
   ) {}
   ngOnInit() {
     this.decodeJwt();
   }
   async decodeJwt() {
-    this.Role = await this.AuthService.decodeObjectFromBase64(localStorage.getItem('jwt'))['role'];
-    this.email = await this.AuthService.decodeObjectFromBase64(localStorage.getItem('jwt'))['email'];
+    this.User = await this.AuthService.decodeObjectFromBase64(localStorage.getItem('jwt'));
+  }
+
+  DetailsEmployee(Id: number) {
+    if (this.User.role == UserRole.SUPER_ADMIN || this.User.role == UserRole.HR) {
+      this.router.navigate(['admin/profile', Id]);
+    } else {
+      this.router.navigate(['guest/profile', Id]);
+    }
   }
 
   profile = [

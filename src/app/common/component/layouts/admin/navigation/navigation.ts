@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { UserRole } from 'src/app/common/enum/enum';
 
 export interface NavigationItem {
   id: string;
@@ -49,12 +50,28 @@ const AdminNavigationItems = [
         icon: 'ti ti-users'
       },
       {
+        id: 'Project',
+        title: 'Projects',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/admin/projects',
+        icon: 'ti ti-brush'
+      },
+      {
+        id: 'Client',
+        title: 'Clients',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/admin/clients',
+        icon: 'ti ti-brush'
+      },
+      {
         id: 'Leave',
         title: 'Leaves',
         type: 'item',
         classes: 'nav-item',
         url: '/admin/leaves',
-        icon: 'ti ti-brush'
+        icon: 'ti ti-bed'
       },
       {
         id: 'Attendance',
@@ -107,7 +124,7 @@ const AdminNavigationItems = [
       },
       {
         id: 'Events',
-        title: 'Events',
+        title: 'Events && Announcements',
         type: 'item',
         classes: 'nav-item',
         url: '/admin/event',
@@ -173,7 +190,7 @@ const GuestNavigationItems = [
         title: 'Profiles',
         type: 'item',
         classes: 'nav-item',
-        url: '/guest/employee/list',
+        url: '/guest/profile',
         icon: 'ti ti-typography'
       },
       {
@@ -182,14 +199,14 @@ const GuestNavigationItems = [
         type: 'item',
         classes: 'nav-item',
         url: '/guest/leave',
-        icon: 'ti ti-brush'
+        icon: 'ti ti-bed'
       },
       {
         id: 'Attendance',
         title: 'Attendance',
         type: 'item',
         classes: 'nav-item',
-        url: '/guest/attendancelist',
+        url: '/guest/attendance',
         icon: 'ti ti-hierarchy-2'
       },
       {
@@ -201,28 +218,20 @@ const GuestNavigationItems = [
         icon: 'ti ti-clock'
       },
       {
+        id: 'Salary',
+        title: 'Salary',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/guest/salary',
+        icon: 'ti ti-credit-card'
+      },
+      {
         id: 'Holidays',
         title: 'Holidays',
         type: 'item',
         classes: 'nav-item',
         url: '/guest/holidays',
         icon: 'ti ti-leaf'
-      },
-      {
-        id: 'Job',
-        title: 'Jobs',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/guest/jobs',
-        icon: 'ti ti-world'
-      },
-      {
-        id: 'Interviews',
-        title: 'Interviews',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/guest/interviews',
-        icon: 'ti ti-users'
       }
     ]
   },
@@ -243,7 +252,7 @@ const GuestNavigationItems = [
       },
       {
         id: 'Events',
-        title: 'Events',
+        title: 'Events && Announcements',
         type: 'item',
         classes: 'nav-item',
         url: '/guest/event',
@@ -273,8 +282,8 @@ const GuestNavigationItems = [
 
 @Injectable()
 export class NavigationItem {
-  get(role) {
-    if (role == 'Hr' || role == 'Super Admin') {
+  get(role: string) {
+    if (role == UserRole.HR || role == UserRole.SUPER_ADMIN) {
       return AdminNavigationItems;
     } else {
       return GuestNavigationItems;

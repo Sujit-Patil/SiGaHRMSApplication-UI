@@ -5,6 +5,31 @@
     </div>
 
     <div class="row">
+      <div class="col-sm-12 col-md-6 col-lg-4">
+        <div class="form-group mb-3">
+          <label class="form-label" for="EmployeeId">Employee ID*</label>
+          <select class="form-control" id="EmployeeId" required [(ngModel)]="leaveBalance.EmployeeId" name="EmployeeId">
+            <option selected *ngIf="!employees.length" [value]="null">No New Employee Exists</option>
+            <option *ngFor="let employee of employees" [value]="employee.EmployeeId">
+              {{ employee.FirstName + ' ' + employee.LastName }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6 col-lg-4">
+        <div class="form-group mb-3">
+          <label class="form-label" for="LeaveBalanceStatus">Leave Balance Status*</label>
+          <select
+            class="form-control"
+            id="LeaveBalanceStatus"
+            required
+            [(ngModel)]="leaveBalance.LeaveBalanceStatus"
+            name="LeaveBalanceStatus"
+          >
+            <option *ngFor="let status of leaveBalanceStatuses" [value]="status.value">{{ status.label }}</option>
+          </select>
+        </div>
+      </div>
       <div
         *ngFor="
           let prop of [
@@ -45,37 +70,13 @@
           />
         </div>
       </div>
-      <div class="col-sm-12 col-md-6 col-lg-4">
-        <div class="form-group mb-3">
-          <label class="form-label" for="EmployeeId">Employee ID*</label>
-          <select
-            class="form-control"
-            id="EmployeeId"
-            required
-            [(ngModel)]="leaveBalance.EmployeeId"
-            name="EmployeeId"
-          >
-            <option *ngFor="let employee of employees" [value]="employee.EmployeeId">{{ employee.FirstName }} {{ employee.LastName }}</option>
-          </select>
-        </div>
-      </div>
-      <div class="col-sm-12 col-md-6 col-lg-4">
-        <div class="form-group mb-3">
-          <label class="form-label" for="LeaveBalanceStatus">Leave Balance Status*</label>
-          <select
-            class="form-control"
-            id="LeaveBalanceStatus"
-            required
-            [(ngModel)]="leaveBalance.LeaveBalanceStatus"
-            name="LeaveBalanceStatus"
-          >
-            <option *ngFor="let status of leaveBalanceStatuses" [value]="status.value">{{ status.label }}</option>
-          </select>
-        </div>
-      </div>
     </div>
-    <div class="d-grid mt-3">
-      <button type="button" class="btn btn-primary">Add Leave Balance</button>
+    <div class="d-grid mt-3" *ngIf="this.updateleaveBalanceId === undefined">
+      <button type="button" class="btn btn-primary" (click)="addLeaveBalance()">Add Leave Balance</button>
+    </div>
+
+    <div class="d-grid mt-3" *ngIf="this.updateleaveBalanceId !== undefined">
+      <button type="button" class="btn btn-primary" (click)="updateLeaveBalance()">Update Leave Balance</button>
     </div>
   </div>
 </div>

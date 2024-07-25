@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { MantisConfig } from 'src/app/app-config';
+import { CamelCasePipe } from 'src/app/common/pipes/CamelCasePipe';
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.scss']
+  styleUrls: ['./admin.component.scss'],
+  providers:[CamelCasePipe]
 })
 export class AdminComponent {
   navCollapsed;

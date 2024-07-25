@@ -1,11 +1,11 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SharedModule } from 'src/app/common/component/module/shared.module';
 import { AlertService } from 'src/app/common/service/alert/alert.service';
 import { LeaveRequest, RequestDto, leaveTypeOptions } from 'src/app/common/datatypes/DataTypes';
 import { ApiService } from 'src/app/common/service/api/api-service.service';
 import { AuthService } from 'src/app/common/service/authitication/auth.service';
-import { Api } from 'src/app/common/enum/enum';
+import { Api, LeaveRequestStatus, UserRole } from 'src/app/common/enum/enum';
 import LeavebalancesComponent from '../leavebalances/leavebalances.component';
 
 @Component({
@@ -15,15 +15,18 @@ import LeavebalancesComponent from '../leavebalances/leavebalances.component';
   styleUrls: ['./leave.component.scss'],
   imports: [CommonModule, SharedModule, LeavebalancesComponent]
 })
-export default class LeaveComponent {
+export default class LeaveComponent implements OnInit {
   active: any;
-  from: any = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
-  to: any = this.datePipe.transform(new Date(new Date().getFullYear(), 12, 31), 'yyyy-MM-dd');
+  from: string;
+  to: string;
+  today: string;
   leaveTypeOptions = leaveTypeOptions;
   leaveRequest = new LeaveRequest();
-  leaveRequests: LeaveRequest[];
-  email: string;
+  leaveRequests: LeaveRequest[] = [];
   activeSection: string = 'leave';
+  currentUser: any;
+  leaveRequestStatus = LeaveRequestStatus;
+  userRole = UserRole;
 
   constructor(
     private alertService: AlertService,
@@ -31,54 +34,97 @@ export default class LeaveComponent {
     private authService: AuthService,
     private datePipe: DatePipe
   ) {
-    this.GetLeaveByDate();
+    const today = new Date();
+    this.from = this.datePipe.transform(today, 'yyyy-MM-dd')!;
+    this.to = this.datePipe.transform(new Date(today.getFullYear(), 11, 31), 'yyyy-MM-dd')!;
+    this.today = this.datePipe.transform(today, 'yyyy-MM-dd')!;
   }
 
-  GetLeaveByDate() {
-    this.apiService.getByDate(Api.LeaveRequest, new RequestDto(null, this.from, this.to)).subscribe((data) => {
+  ngOnInit() {
+    this.currentUser = this.authService.decodeObjectFromBase64(localStorage.getItem('jwt'));
+    this.loadLeaveRequests();
+  }
+
+  loadLeaveRequests() {
+    const requestDto = new RequestDto(null, this.from, this.to);
+    this.apiService.getByDate(Api.LeaveRequest, requestDto).subscribe((data) => {
       this.leaveRequests = data;
     });
   }
 
-  async newLeaveRequest() {
-    this.leaveRequest.EmployeeId = Number(this.authService.decodeObjectFromBase64(localStorage.getItem('jwt'))['employeeId']);
-    if ((await this.alertService.leaveRequestAlert(this.leaveRequest)).isConfirmed) {
-      this.apiService.post(Api.LeaveRequest, this.leaveRequest).subscribe((data) => {
-        this.alertService
-          .Toast()
-          .fire({ icon: 'success', title: 'Leave Request Added Successfully' })
-          .then((data) => (data.dismiss ? this.GetLeaveByDate() : ''));
+  private getEmployeeId() {
+    return Number(this.authService.decodeObjectFromBase64(localStorage.getItem('jwt'))['employeeId']);
+  }
+
+  private handleApiResponse(message: string, callback: () => void) {
+    this.alertService
+      .Toast()
+      .fire({ icon: 'success', title: message })
+      .then((data) => {
+        if (data.dismiss) {
+          callback();
+        }
+      });
+  }
+
+  approve(request: LeaveRequest) {
+    this.updateLeaveRequestStatus(request, 'Leave Approved');
+  }
+
+  reject(request: LeaveRequest) {
+    this.updateLeaveRequestStatus(request, 'Leave Rejected');
+  }
+
+  private updateLeaveRequestStatus(request: LeaveRequest, message: string) {
+    this.apiService.updateLeaveRequestStatus(Api.LeaveRequest, request).subscribe((data) => {
+      if (data.IsValid) {
+        this.handleApiResponse(message, () => this.loadLeaveRequests());
+      }
+    });
+  }
+
+  async processLeaveRequest(action: 'new' | 'update', id?: number) {
+    const employeeId = this.getEmployeeId();
+    const leaveBalance = await this.apiService.get(Api.LeaveBalance, employeeId).toPromise();
+    if (action === 'update') {
+      this.leaveRequest = this.leaveRequests.find((x) => x.LeaveRequestId === id)!;
+    }
+    const isConfirmed = (
+      await this.alertService.leaveRequestAlert(
+        this.leaveRequest,
+        leaveBalance,
+        this.leaveRequests.filter((data) => data.EmployeeId === employeeId)
+      )
+    ).isConfirmed;
+    if (isConfirmed) {
+      this.apiService[action === 'new' ? 'post' : 'update'](Api.LeaveRequest, this.leaveRequest).subscribe(() => {
+        this.handleApiResponse(action === 'new' ? 'Leave Request Added Successfully' : 'Leave Request Updated Successfully', () =>
+          this.loadLeaveRequests()
+        );
       });
     }
   }
 
-  async updateLeaveRequest(id: number) {
-    this.leaveRequest = this.leaveRequests.find((x) => x.LeaveRequestId === id);
-    if ((await this.alertService.leaveRequestAlert(this.leaveRequest)).isConfirmed) {
-      this.apiService.update(Api.LeaveRequest, this.leaveRequest).subscribe((data) => {
-        this.alertService
-          .Toast()
-          .fire({ icon: 'success', title: 'Leave Request Updated Successfully' })
-          .then((data) => (data.dismiss ? this.GetLeaveByDate() : ''));
-      });
-    }
+  newLeaveRequest() {
+    this.processLeaveRequest('new');
   }
 
-  async deleteLeaveRequest(id: number) {
-    this.apiService.get(Api.LeaveRequest, id).subscribe((deleteLeaveRequest) => {
-      if (deleteLeaveRequest.LeaveRequestStatus === 'Open') {
-        deleteLeaveRequest.IsDeleted = true;
-        this.apiService.update(Api.LeaveRequest, deleteLeaveRequest).subscribe((data) => {
-          this.alertService
-            .Toast()
-            .fire({ icon: 'success', title: 'Leave Request Deleted Successfully' })
-            .then((data) => (data.dismiss ? this.GetLeaveByDate() : ''));
+  updateLeaveRequest(id: number) {
+    this.processLeaveRequest('update', id);
+  }
+
+  deleteLeaveRequest(id: number) {
+    this.apiService.get(Api.LeaveRequest, id).subscribe((request) => {
+      if (request.LeaveRequestStatus === 'Open') {
+        request.IsDeleted = true;
+        this.apiService.update(Api.LeaveRequest, request).subscribe(() => {
+          this.handleApiResponse('Leave Request Deleted Successfully', () => this.loadLeaveRequests());
         });
       }
     });
   }
 
-  async showReason(Reason) {
-    await this.alertService.Show(Reason);
+  async showReason(reason: string) {
+    await this.alertService.Show(reason);
   }
 }

@@ -20,6 +20,8 @@ import { NavCollapseComponent } from './common/component/layouts/admin/navigatio
 import { NavContentComponent } from './common/component/layouts/admin/navigation/nav-content/nav-content.component';
 import { NavigationItem } from './common/component/layouts/admin/navigation/navigation';
 import { SwalPortalTargets, SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { CamelCasePipe } from './common/pipes/CamelCasePipe';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -52,7 +54,8 @@ import { SwalPortalTargets, SweetAlert2Module } from '@sweetalert2/ngx-sweetaler
       useClass: TokenInterceptor,
       multi: true
     },
-    SwalPortalTargets
+    SwalPortalTargets,
+    CamelCasePipe
   ],
   bootstrap: [AppComponent]
 })

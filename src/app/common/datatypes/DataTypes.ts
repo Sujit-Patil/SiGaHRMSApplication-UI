@@ -1,4 +1,4 @@
-import { LeaveBalanceStatus, LeaveType, TaskType, TimeSheetStatus, TimeSheetType } from '../enum/enum';
+import { BillingType, ClientStatus, LeaveBalanceStatus, LeaveType, TaskType, TimeSheetStatus, TimeSheetType } from '../enum/enum';
 
 export class EmailDto {
   toEmail: string;
@@ -9,6 +9,10 @@ export class EmailDto {
 export class TaskName {
   TaskId: number;
   TaskDetails: string;
+  ProjectId?: number;
+  Project?: Project | null = null;
+  ClientId?: number;
+  Client?: any | null = null;
 }
 export class Employee {
   EmployeeId: number;
@@ -55,58 +59,66 @@ export class Event {
 }
 
 export class Holiday {
-  holidayId: number = 0;
-  title: string;
-  type: string;
-  startDate: string = '';
-  details: number;
-  imgUrl: string = '';
+  HolidayId: number;
+  Date: any;
+  Description: any;
+  IsDeleted: boolean;
+  CreatedBy: number | null = null;
+  CreatedDateTime: any;
+  LastModifiedBy: number | null = null;
+  LastModifiedDateTime: any | null = null;
+  DeletedBy: number | null = null;
+  DeletedDateTime: Date | null = null;
 }
 
-// Array of options for the dropdown
-export const leaveTypeOptions = [
-  { value: LeaveType.EarnedLeave, label: 'Earned Leave' },
-  { value: LeaveType.CasualLeave, label: 'Casual Leave' },
-  { value: LeaveType.SickLeave, label: 'Sick Leave' },
-  { value: LeaveType.MaternityLeave, label: 'Maternity Leave' },
-  { value: LeaveType.CompensatoryOff, label: 'Compensatory Off' },
-  { value: LeaveType.MarriageLeave, label: 'Marriage Leave' },
-  { value: LeaveType.PaternityLeave, label: 'Paternity Leave' },
-  { value: LeaveType.BereavementLeave, label: 'Bereavement Leave' },
-  { value: LeaveType.LossOfPay, label: 'Loss Of Pay' }
-];
+export class Project {
+  ProjectId: number;
+  Title: string;
+  StartDate: any;
+  EndDate: any | null = null;
+  RateUSD: number;
+  RateINR: number;
+  WeeklyLimit: number;
+  BillingType: BillingType;
+  Status: string = null;
+  ClientId: number;
+  Client: Client = null;
+  BillingPlatformId: number;
+  BillingPlatform: BillingPlatform = null;
+  IsDeleted: boolean = false;
+  CreatedBy: number | null = null;
+  CreatedDateTime: Date | null = null;
+  LastModifiedBy: number | null = null;
+  LastModifiedDateTime: Date | null = new Date();
+  DeletedBy: number | null = null;
+  DeletedDateTime: Date | null = null;
+}
 
-// Array of options for the dropdown
-export const taskTypeOptions = [
-  { value: TaskType.Development, label: 'Development' },
-  { value: TaskType.Design, label: 'Design' },
-  { value: TaskType.Testing, label: 'Testing' },
-  { value: TaskType.Review, label: 'Review' },
-  { value: TaskType.Support, label: 'Support' },
-  { value: TaskType.Learning, label: 'Learning' },
-  { value: TaskType.Meeting, label: 'Meeting' },
-  { value: TaskType.Management, label: 'Management' },
-  { value: TaskType.SocialTime, label: 'Social Time' }
-];
-
-// Array of options for the dropdown
-export const timeSheetStatusOptions = [
-  { value: TimeSheetStatus.Open, label: 'Open' },
-  { value: TimeSheetStatus.Submitted, label: 'Submitted' },
-  { value: TimeSheetStatus.Approved, label: 'Approved' },
-  { value: TimeSheetStatus.Rejected, label: 'Rejected' }
-];
-
-export const timeSheetTypeOptions = [
-  { value: TimeSheetType.Daily, label: 'Daily' },
-  { value: TimeSheetType.Weekly, label: 'Weekly' }
-];
-
-export const LeaveBalanceStatusOptions = [
-  { value: LeaveBalanceStatus.Applicable, label: 'Applicable' },
-  { value: LeaveBalanceStatus.NotApplicable, label: 'NotApplicable' }
-];
-
+export class BillingPlatform {
+  BillingPlatformId: number;
+  Name: string;
+  IsDeleted: boolean = false;
+  CreatedBy: number | null = null;
+  CreatedDateTime: Date | null = null;
+  LastModifiedBy: number | null = null;
+  LastModifiedDateTime: Date | null = new Date();
+  DeletedBy: number | null = null;
+  DeletedDateTime: Date | null = null;
+}
+export class Client {
+  ClientId: number;
+  Name: string = '';
+  CompanyName: string | null = '';
+  ContactPersonName: string | null = '';
+  Status: any;
+  IsDeleted: boolean = false;
+  CreatedBy: number | null = null;
+  CreatedDateTime: Date | null = null;
+  LastModifiedBy: number | null = null;
+  LastModifiedDateTime: Date | null = new Date();
+  DeletedBy: number | null = null;
+  DeletedDateTime: Date | null = null;
+}
 export class RequestDto {
   EmployeeId: number = null;
   FormDate: any = null;
@@ -188,12 +200,8 @@ export class TimeSheetDetail {
   IsBillable: boolean;
   TimeSheetDate = null;
   TaskType: any;
-  ProjectId?: number | null = null;
-  Project?: any | null = null;
   TimesheetId: number;
   Timesheet?: TimeSheet | null = null;
-  ClientId?: number | null = null;
-  Client?: any | null = null;
   IsDeleted: boolean = false;
   CreatedBy?: number | null = null;
   CreatedDateTime: any = null;
@@ -203,12 +211,62 @@ export class TimeSheetDetail {
   DeletedDateTime?: any | null = null;
 }
 
+export class IncentivePurpose {
+  IncentivePurposeId: number;
+  Purpose: any;
+  IsDeleted: boolean;
+  CreatedBy: number | null = null;
+  CreatedDateTime: any | null = null;
+  LastModifiedBy: number | null = null;
+  LastModifiedDateTime: any = null;
+  DeletedBy: number | null = null;
+  DeletedDateTime: any | null = null;
+}
+
+export class Incentive {
+  IncentiveId: number;
+  IncentivePurposeId: number;
+  IncentivePurpose: IncentivePurpose;
+  Amount: number;
+  Description: string | null = null;
+  EmployeeId: number;
+  Employee: any | null = null;
+  IsDeleted: boolean;
+  CreatedBy: number | null = null;
+  CreatedDateTime: any | null = null;
+  LastModifiedBy: number | null = null;
+  LastModifiedDateTime: any = null;
+  DeletedBy: number | null = null;
+  DeletedDateTime: any | null = null;
+}
+
+export class EmployeeSalaryStructure {
+  EmployeeSalaryStructureId: number;
+  FromDate: string;
+  ToDate: string | null = null;
+  Basic: number;
+  HRA: number;
+  DA: number;
+  Conveyance: number;
+  MedicalAllowance: number;
+  SpecialAllowance: number;
+  TDS: number;
+  EmployeeId: number;
+  Employee: Employee | null = null;
+  IsDeleted: boolean = false;
+  CreatedBy: number | null = null;
+  CreatedDateTime: any | null = null;
+  LastModifiedBy: number | null = null;
+  LastModifiedDateTime: any | null = null;
+  DeletedBy: number | null = null;
+  DeletedDateTime: any | null = null;
+}
 export class EmployeeSalary {
   EmployeeSalaryStructureId: number;
   FromDate: any = null;
-  ToDate: any = null;
+  ToDate: any;
   EmployeeSalaryId: number;
-  SalaryForAMonth: Date;
+  SalaryForAMonth: any;
   Basic: number;
   HRA: number;
   DA: number;
@@ -275,3 +333,59 @@ export class NotificationDto {
   Icon: string;
   color: string;
 }
+
+export const leaveTypeOptions = [
+  { value: LeaveType.EarnedLeave, label: 'Earned Leave' },
+  { value: LeaveType.CasualLeave, label: 'Casual Leave' },
+  { value: LeaveType.SickLeave, label: 'Sick Leave' },
+  { value: LeaveType.MaternityLeave, label: 'Maternity Leave' },
+  { value: LeaveType.CompensatoryOff, label: 'Compensatory Off' },
+  { value: LeaveType.MarriageLeave, label: 'Marriage Leave' },
+  { value: LeaveType.PaternityLeave, label: 'Paternity Leave' },
+  { value: LeaveType.BereavementLeave, label: 'Bereavement Leave' },
+  { value: LeaveType.LossOfPay, label: 'Loss Of Pay' }
+];
+
+export const leaveTypeArray=['Earned Leave','Casual Leave','Sick Leave','Maternity Leave','Compensatory Off','Marriage Leave','Paternity Leave','Bereavement Leave','Loss Of Pay']
+
+export const taskTypeOptions = [
+  { value: TaskType.Development, label: 'Development' },
+  { value: TaskType.Design, label: 'Design' },
+  { value: TaskType.Testing, label: 'Testing' },
+  { value: TaskType.Review, label: 'Review' },
+  { value: TaskType.Support, label: 'Support' },
+  { value: TaskType.Learning, label: 'Learning' },
+  { value: TaskType.Meeting, label: 'Meeting' },
+  { value: TaskType.Management, label: 'Management' },
+  { value: TaskType.SocialTime, label: 'Social Time' }
+];
+
+export const timeSheetStatusOptions = [
+  { value: TimeSheetStatus.Open, label: 'Open' },
+  { value: TimeSheetStatus.Submitted, label: 'Submitted' },
+  { value: TimeSheetStatus.Approved, label: 'Approved' },
+  { value: TimeSheetStatus.Rejected, label: 'Rejected' }
+];
+
+export const timeSheetTypeOptions = [
+  { value: TimeSheetType.Daily, label: 'Daily' },
+  { value: TimeSheetType.Weekly, label: 'Weekly' }
+];
+
+export const LeaveBalanceStatusOptions = [
+  { value: LeaveBalanceStatus.Applicable, label: 'Applicable' },
+  { value: LeaveBalanceStatus.NotApplicable, label: 'NotApplicable' }
+];
+
+export const billingTypeOptions = [
+  { value: BillingType.Hourly, label: 'Hourly' },
+  { value: BillingType.Weekly, label: 'Weekly' },
+  { value: BillingType.Monthly, label: 'Monthly' },
+  { value: BillingType.Fixed, label: 'Fixed' },
+  { value: BillingType.NonBillable, label: 'Non-Billable' }
+];
+
+export const clientStatusOptions = [
+  { value: ClientStatus.Active, label: 'Active' },
+  { value: ClientStatus.Inactive, label: 'Inactive' }
+];

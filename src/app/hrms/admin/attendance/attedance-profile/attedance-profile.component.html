@@ -62,13 +62,13 @@
                 </div>
 
                 <div class="flex-grow-1 ms-3 mt-3">
-                  <h6 class="mb-1">{{ employeeAtt.Employee.FirstName}} {{ employeeAtt.Employee.LastName }}</h6>
+                  <h6 class="mb-1">{{ employeeAtt.Employee.FirstName }} {{ employeeAtt.Employee.LastName }}</h6>
                 </div>
               </a>
             </div>
             <div class="d-flex justify-content-around mt-3 mb-3">
               <button class="btn btn-outline-secondary p-2"><app-clock></app-clock></button>
-              <span *ngIf="employeeAtt.EmployeeId==this.userAuth && employeeAtt.AttendanceDate==today" >
+              <span *ngIf="employeeAtt.EmployeeId == this.userAuth && employeeAtt.AttendanceDate == today">
                 <div [ngSwitch]="attendanceButton">
                   <button *ngSwitchCase="'InTime'" class="btn btn-primary" (click)="checkIn()">Check-In</button>
                   <button *ngSwitchCase="'OutTime'" class="btn btn-danger" (click)="checkOut()">Check-Out</button>
@@ -83,7 +83,7 @@
                     <h6 class="mb-1">Check In</h6>
                   </div>
                   <div class="flex-shrink-0 text-end">
-                    <h6 class="mb-1">{{ !employeeAtt.InTime?'00:00:00':employeeAtt.InTime | date: 'HH:mm:ss a' }}</h6>
+                    <h6 class="mb-1">{{ !employeeAtt.InTime ? '00:00:00' : (employeeAtt.InTime | date: 'HH:mm:ss a') }}</h6>
                   </div>
                 </div>
                 <div class="d-flex mt-3">
@@ -122,13 +122,13 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr class="text-center" *ngFor="let attendance of attendancelist;let i=index">
+                    <tr class="text-center" *ngFor="let attendance of attendancelist; let i = index">
                       <td>
-                       <b> {{i+1}}</b>
+                        <b> {{ i + 1 }}</b>
                       </td>
-                      <td class="text-muted">{{attendance.InTime | date :'HH:mm:ss'}}</td>
-                      <td class="text-muted">{{!attendance.OutTime?'00:00:00':attendance.OutTime | date :'HH:mm:ss'}}</td>
-                      <td class="text-muted">{{getCalculateWorkedTime(attendance.InTime,attendance.OutTime)}}</td>
+                      <td class="text-muted">{{ attendance.InTime | date: 'HH:mm:ss' }}</td>
+                      <td class="text-muted">{{ !attendance.OutTime ? '00:00:00' : (attendance.OutTime | date: 'HH:mm:ss') }}</td>
+                      <td class="text-muted">{{ getCalculateWorkedTime(attendance.InTime, attendance.OutTime) }}</td>
                     </tr>
                   </tbody>
                 </table>

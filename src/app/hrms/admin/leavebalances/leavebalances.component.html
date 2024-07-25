@@ -2,7 +2,7 @@
   <div class="col-md-12 col-xl-8" style="width: 100%">
     <div class="d-flex justify-content-between align-items-center mb-2">
       <h5 class="mb-3 mt-2">All Leavebalance Details</h5>
-      <div>
+      <div *ngIf="currentUser.role == userRole.SUPER_ADMIN">
         <button class="btn btn-primary" (click)="activeSection = 'register'">New</button>
       </div>
     </div>
@@ -14,38 +14,39 @@
               <tr class="text-center">
                 <th></th>
                 <th>Name</th>
-                <th>Apply Date</th>
-                <th>Leave Type</th>
-                <th>Form Date</th>
-                <th>To Date</th>
-                <th>Leave Length</th>
-                <th>Status</th>
-                <th>Leave Reason</th>
+                <th>EarnedLeaves</th>
+                <th>CasualLeaves</th>
+                <th>SickLeaves</th>
+                <th>CompensatoryOffs</th>
+                <th>LeaveBalanceStatus</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="text-center">
+              <tr class="text-center" *ngFor="let leavebalance of leavebalances">
                 <td>
                   <div class="flex-shrink-0">
                     <img src="assets/images/user/avatar-2.jpg" alt="user-image" class="user-avtar wid-35" />
                   </div>
                 </td>
-                <td> xyz</td>
-                <td>sdhufhs</td>
-                <td>gqffwf</td>
-                <td>wdfgqaf</td>
-                <td>adffqvwf</td>
-                <td>wfdugfwqg</td>
+                <td>{{ leavebalance.Employee.FirstName }} {{ leavebalance.Employee.LastName }}</td>
+                <td>{{ leavebalance.EarnedLeaves }}</td>
+                <td>{{ leavebalance.CasualLeaves }}</td>
+                <td>{{ leavebalance.SickLeaves }}</td>
+                <td>{{ leavebalance.CompensatoryOffs }}</td>
 
                 <td>
-                  <span><i class="ti ti-circle-check text-success m-r-5"></i>qwfhdhfq</span>
+                  <span
+                    ><i
+                      class="ti ti-circle-check {{
+                        leavebalance.LeaveBalanceStatus == leaveBalanceStatus.Applicable ? 'text-success' : 'text-danger'
+                      }} m-r-5"
+                    ></i
+                    >{{ leavebalance.LeaveBalanceStatus }}</span
+                  >
                 </td>
-                <td
-                  ><a class="btn btn-outline-primary"><i class="ti ti-eye"></i></a
-                ></td>
                 <td>
-                  <a class="btn btn-outline-primary"><i class="ti ti-edit"></i></a>
+                  <a class="btn btn-outline-primary" (click)="leaveBalanceId=leavebalance.LeaveBalanceId;activeSection = 'update'" ><i class="ti ti-edit"></i></a>
                   <a class="btn btn-outline-danger m-2"><i class="ti ti-trash"></i></a>
                 </td>
               </tr>
@@ -58,5 +59,8 @@
 </ng-template>
 
 <ng-template ngbNavContent [ngIf]="activeSection == 'register'">
-  <app-leavebalance-form [leaveBalancesList]="leavebalances"></app-leavebalance-form>
+  <app-leavebalance-form (notify)="handleNotification($event)" [leaveBalancesList]="leavebalances"></app-leavebalance-form>
+</ng-template>
+<ng-template ngbNavContent [ngIf]="activeSection == 'update'">
+  <app-leavebalance-form (notify)="handleNotification($event)" [leaveBalancesList]="leavebalances" [updateleaveBalanceId]="leaveBalanceId"></app-leavebalance-form>
 </ng-template>

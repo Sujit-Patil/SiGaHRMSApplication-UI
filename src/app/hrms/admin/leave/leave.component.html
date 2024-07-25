@@ -10,23 +10,22 @@
   <ng-template ngbNavContent [ngIf]="activeSection == 'leave'">
     <div class="col-md-12 col-xl-8" style="width: 100%">
       <div class="d-flex justify-content-between align-items-center mb-2">
-        <h5 class="mb-3 mt-2">All Leave Details</h5>
+        <div></div>
         <div class="d-flex gap-2 align-items-end">
           <div>
-            <label for=""><b>From Date :</b> </label>
             <input type="date" class="form-control" [(ngModel)]="from" name="dp" />
           </div>
 
           <div>
-            <label for=""><b>To Date :</b> </label>
             <input type="date" class="form-control" [(ngModel)]="to" [min]="from" name="kp" />
           </div>
 
-          <div class="get-btn ms-3">
-            <button class="btn btn-md btn-primary" (click)="GetLeaveByDate()">Get Leaves</button>
+          <div class="">
+            <button class="btn btn-md btn-primary" (click)="loadLeaveRequests()">Get Leaves</button>
           </div>
         </div>
-        <div>
+
+        <div *ngIf="currentUser.role != userRole.SUPER_ADMIN">
           <button class="btn btn-primary" (click)="newLeaveRequest()">New Request</button>
         </div>
       </div>
@@ -65,16 +64,39 @@
                     <td>{{ Request.IsHalfDay }}</td>
 
                     <td>
-                      <span><i class="ti ti-circle-check text-success m-r-5"></i>{{ Request.LeaveRequestStatus }}</span>
+                      <span
+                        ><i
+                          class="ti ti-circle-check {{
+                            Request.LeaveRequestStatus == leaveRequestStatus.Rejected ? 'text-danger' : 'text-success'
+                          }} m-r-5"
+                        ></i
+                        >{{ Request.LeaveRequestStatus }}</span
+                      >
                     </td>
                     <td
-                      ><a class="btn btn-outline-primary"><i class="ti ti-eye" (click)="showReason(Request.Reason)"></i></a
+                      ><a class="btn btn-outline-primary" (click)="showReason(Request.Reason)"><i class="ti ti-message"></i></a
                     ></td>
                     <td>
-                      <a class="btn btn-outline-primary" (click)="updateLeaveRequest(Request.LeaveRequestId)"><i class="ti ti-edit"></i></a>
-                      <a class="btn btn-outline-danger m-2" (click)="deleteLeaveRequest(Request.LeaveRequestId)"
-                        ><i class="ti ti-trash"></i
-                      ></a>
+                      <span *ngIf="currentUser.role == userRole.SUPER_ADMIN && Request.LeaveRequestStatus == leaveRequestStatus.Open">
+                        <a
+                          class="btn btn-outline-primary"
+                          (click)="Request.LeaveRequestStatus = leaveRequestStatus.Approved; approve(Request)"
+                          ><i class="ti ti-checks"></i
+                        ></a>
+                        <a
+                          class="btn btn-outline-danger m-2"
+                          (click)="Request.LeaveRequestStatus = leaveRequestStatus.Rejected; reject(Request)"
+                          ><i class="ti ti-x"></i
+                        ></a>
+                      </span>
+                      <span *ngIf="currentUser.employeeId == Request.EmployeeId && today <= Request.FromDate">
+                        <a class="btn btn-outline-primary" (click)="updateLeaveRequest(Request.LeaveRequestId)"
+                          ><i class="ti ti-edit"></i
+                        ></a>
+                        <a class="btn btn-outline-danger m-2" (click)="deleteLeaveRequest(Request.LeaveRequestId)"
+                          ><i class="ti ti-trash"></i
+                        ></a>
+                      </span>
                     </td>
                   </tr>
                 </tbody>

@@ -1,52 +1,100 @@
+<div class="row">
+  <ul ngbNav #nav="ngbNav" class="nav-tabs">
+    <li [ngbNavItem]="1">
+      <button ngbNavLink
+        ><svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="icon icon-tabler icon-tabler-user-square"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M9 10a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+          <path d="M6 21v-1a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v1" />
+          <path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14z" />
+        </svg>
+        All Holidays</button
+      >
+    </li>
+  </ul>
+  <div class="col-md-12 col-xl-8" style="width: 100%">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h5 class="mb-3 mt-2">All Holidays</h5>
+      <div class="d-flex gap-2 align-items-end">
+        <div>
+          <label for=""><b>From Date :</b> </label>
+          <input type="date" class="form-control" [(ngModel)]="from" name="dp" />
+        </div>
 
-<div id="header">
-    <h1>La Saveur</h1>
-    <p>The Traditional Fench Taste</p>
+        <div>
+          <label for=""><b>To Date :</b> </label>
+          <input type="date" class="form-control" [(ngModel)]="to" [min]="from" name="kp" />
+        </div>
+
+        <div class="get-btn ms-3">
+          <button class="btn btn-md btn-primary" (click)="getHoliday()">Get Holidays</button>
+        </div>
       </div>
-    <div class="container">
-    <div class="card">
-      <div class="card-image">
-        <img src="https://images.unsplash.com/photo-1604135307399-86c6ce0aba8e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1374&q=80">
+      <div *ngIf="userRole.SUPER_ADMIN == currentUser.role || userRole.HR == currentUser.role" class="btn-group">
+        <button class="btn btn-primary" (click)="addHoliday()"> New Holiday </button>
       </div>
-      <div class="card-text">
-        <p class="card-meal-type">Breakfast/Eggs</p>
-        <h2 class="card-title" style="color: white;">Délicieux Bénédicte</h2>
-        <p class="card-body">Eggs Benedict with hollandaise sauce, crispy bacon and an assortment of garden herbs.</p>
-      </div>
-      <div class="card-price">$56</div>
     </div>
-      <div class="card">
-      <div class="card-image">
-        <img src="https://images.unsplash.com/photo-1551782450-17144efb9c50?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1769&q=80">
+    <div class="card tbl-card">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover table-borderless mb-0">
+            <thead>
+              <tr class="text-center">
+                <th></th>
+                <th>Id</th>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let holiday of holidays" class="text-center">
+                <td>
+                  <div class="flex-shrink-0"> <img src="assets/images/user/avatar-2.jpg" alt="user-image" class="user-avtar wid-35" /> </div
+                ></td>
+                <td>{{ holiday.HolidayId }}</td>
+                <td>{{ holiday.Date | date}}</td>
+                <td>{{ holiday.Description }}</td>
+                <td
+                  ><a class="btn btn-outline-success m-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-user-search"
+                    >
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                      <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                      <path d="M6 21v-2a4 4 0 0 1 4 -4h1.5" />
+                      <path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" />
+                      <path d="M20.2 20.2l1.8 1.8" /></svg
+                  ></a>
+                  <a class="btn btn-outline-primary" (click)="updateHoliday(holiday)"><i class="ti ti-edit"></i></a>
+                  <a class="btn btn-outline-danger m-2" (click)="holiday.IsDeleted=true;deleteHoliday(holiday)"><i class="ti ti-trash"></i></a
+                ></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="card-text">
-        <p class="card-meal-type">Lunch/Meat</p>
-        <h2 class="card-title" style="color: white;">Du bœuf Burger</h2>
-        <p class="card-body">A beef burger with wholewheat patty, juicy lettuce and a side of gluten free fries</p>
-      </div>
-      <div class="card-price">$39</div>
     </div>
-      <div class="card">
-      <div class="card-image">
-        <img src="https://images.unsplash.com/photo-1635146037526-a75e6905ad78?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1834&q=80">
-      </div>
-      <div class="card-text">
-        <p class="card-meal-type">Soups/Meat</p>
-        <h2 class="card-title" style="color: white;">Soupe à l’oignon</h2>
-        <p class="card-body">The traditional French soup made with onions and beef with a dollop of garlic and saffaron mayonise.</p>
-      </div>
-      <div class="card-price">$69</div>
-    </div>
-      <div class="card">
-      <div class="card-image">
-        <img src="https://www.expatica.com/app/uploads/sites/5/2020/03/Coq-au-vin.jpg">
-      </div>
-      <div class="card-text">
-        <p class="card-meal-type">Appetizers/Meat</p>
-        <h2 class="card-title" style="color: white;">Coq au Vin</h2>
-        <p class="card-body">Chickens doused in wine, mushrooms, pork, onions and garlic.</p>
-      </div>
-      <div class="card-price">$104</div>
-    </div>
-    
-    </div>
+  </div>
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
+</div>

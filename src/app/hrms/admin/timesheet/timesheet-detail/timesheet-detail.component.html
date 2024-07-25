@@ -3,9 +3,18 @@
     <h5 class="mb-3 mt-2">TimeSheet Details</h5>
     <div class="d-flex gap-3 align-items-center">
       <button class="btn btn-secondary" (click)="navigate(false)">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-          class="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-left">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-left"
+        >
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <path d="M11 7l-5 5l5 5" />
           <path d="M17 7l-5 5l5 5" />
@@ -15,9 +24,18 @@
         {{ getWeekRange(date).startOfWeek | date }} - {{ getWeekRange(date).endOfWeek | date }}
       </div>
       <button class="btn btn-secondary" (click)="navigate(true)">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-          class="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-right">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="icon icon-tabler icons-tabler-outline icon-tabler-chevrons-right"
+        >
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <path d="M7 7l5 5l-5 5" />
           <path d="M13 7l5 5l-5 5" />
@@ -45,7 +63,7 @@
             <tbody>
               <ng-container *ngIf="taskArray.length <= 0; else elseBlock">
                 <tr class="text-center">
-                  <td >Not Logs Found</td>
+                  <td>Not Logs Found</td>
                 </tr>
               </ng-container>
               <ng-template #elseBlock>
@@ -53,11 +71,20 @@
                   <td>{{ taskGroup[0].Task.TaskDetails }}</td>
                   <td *ngFor="let daySheet of taskGroup" class="border">
                     <span>{{ daySheet.Time | number: '1.2-2' }}</span>
-                    <span class="d-flex align-items-end justify-content-end" (click)="task(daySheet)">
-                      <svg style="color: gray" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round"
-                        class="icon icon-tabler icons-tabler-outline icon-tabler-clock-edit">
+                    <span class="d-flex align-items-end justify-content-end" (click)="authUser ? task(daySheet) : viewTask(daySheet)">
+                      <svg
+                        style="color: gray"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="icon icon-tabler icons-tabler-outline icon-tabler-clock-edit"
+                      >
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M21 12a9 9 0 1 0 -9.972 8.948c.32 .034 .644 .052 .972 .052" />
                         <path d="M12 7v5l2 2" />
